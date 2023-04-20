@@ -2,8 +2,6 @@ package cache
 
 import (
 	"github.com/davveo/lemonShop/conf"
-	"github.com/davveo/lemonShop/pkg/timeutil"
-	"github.com/davveo/lemonShop/pkg/trace"
 	"github.com/go-redis/redis/v7"
 	"github.com/pkg/errors"
 	"strings"
@@ -12,11 +10,7 @@ import (
 
 type (
 	Option func(*option)
-	Trace  = trace.T
-	option struct {
-		Trace *trace.Trace
-		Redis *trace.Redis
-	}
+	option struct{}
 )
 
 func newOption() *option {
@@ -79,19 +73,7 @@ func redisConnect() (*redis.Client, error) {
 }
 
 func (c *cacheRepo) Set(key, value string, ttl time.Duration, options ...Option) error {
-	ts := time.Now()
 	opt := newOption()
-	defer func() {
-		if opt.Trace != nil {
-			opt.Redis.Timestamp = timeutil.CSTLayoutString()
-			opt.Redis.Handle = "set"
-			opt.Redis.Key = key
-			opt.Redis.Value = value
-			opt.Redis.TTL = ttl.Minutes()
-			opt.Redis.CostSeconds = time.Since(ts).Seconds()
-			opt.Trace.AppendRedis(opt.Redis)
-		}
-	}()
 
 	for _, f := range options {
 		f(opt)
@@ -104,20 +86,8 @@ func (c *cacheRepo) Set(key, value string, ttl time.Duration, options ...Option)
 	return nil
 }
 
-// Get get some key from redis
-// get("xxx", ctx.Trace())
 func (c *cacheRepo) Get(key string, options ...Option) (string, error) {
-	ts := time.Now()
 	opt := newOption()
-	defer func() {
-		if opt.Trace != nil {
-			opt.Redis.Timestamp = timeutil.CSTLayoutString()
-			opt.Redis.Handle = "get"
-			opt.Redis.Key = key
-			opt.Redis.CostSeconds = time.Since(ts).Seconds()
-			opt.Trace.AppendRedis(opt.Redis)
-		}
-	}()
 
 	for _, f := range options {
 		f(opt)
@@ -159,17 +129,7 @@ func (c *cacheRepo) Exists(keys ...string) bool {
 }
 
 func (c *cacheRepo) Del(key string, options ...Option) bool {
-	ts := time.Now()
 	opt := newOption()
-	defer func() {
-		if opt.Trace != nil {
-			opt.Redis.Timestamp = timeutil.CSTLayoutString()
-			opt.Redis.Handle = "del"
-			opt.Redis.Key = key
-			opt.Redis.CostSeconds = time.Since(ts).Seconds()
-			opt.Trace.AppendRedis(opt.Redis)
-		}
-	}()
 
 	for _, f := range options {
 		f(opt)
@@ -184,17 +144,7 @@ func (c *cacheRepo) Del(key string, options ...Option) bool {
 }
 
 func (c *cacheRepo) Incr(key string, options ...Option) int64 {
-	ts := time.Now()
 	opt := newOption()
-	defer func() {
-		if opt.Trace != nil {
-			opt.Redis.Timestamp = timeutil.CSTLayoutString()
-			opt.Redis.Handle = "incr"
-			opt.Redis.Key = key
-			opt.Redis.CostSeconds = time.Since(ts).Seconds()
-			opt.Trace.AppendRedis(opt.Redis)
-		}
-	}()
 
 	for _, f := range options {
 		f(opt)
@@ -205,15 +155,6 @@ func (c *cacheRepo) Incr(key string, options ...Option) int64 {
 
 func (c *cacheRepo) Close() error {
 	return c.client.Close()
-}
-
-func WithTrace(t Trace) Option {
-	return func(opt *option) {
-		if t != nil {
-			opt.Trace = t.(*trace.Trace)
-			opt.Redis = new(trace.Redis)
-		}
-	}
 }
 
 func (c *cacheRepo) Version() string {

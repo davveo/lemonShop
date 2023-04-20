@@ -14,7 +14,11 @@ const (
 func Init() (*AppConf, error) {
 	err := config.Unmarshal(ConfYamlDir,
 		&Conf, config.ProfileFunc(func() string {
-			return os.Getenv(activeProfiles)
+			active := os.Getenv(activeProfiles)
+			if active == "" {
+				active = "dev" // 默认配置
+			}
+			return active
 		}))
 	if err != nil {
 		return nil, err
