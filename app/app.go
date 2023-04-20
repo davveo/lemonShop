@@ -3,7 +3,9 @@ package app
 import (
 	"fmt"
 	"github.com/davveo/lemonShop/app/router"
-	"github.com/davveo/lemonShop/config"
+	"github.com/davveo/lemonShop/conf"
+	"github.com/davveo/lemonShop/pkg/cache"
+	"github.com/davveo/lemonShop/pkg/db"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -11,22 +13,32 @@ import (
 )
 
 type Server struct {
+	appConf *conf.AppConf
+	db      db.Repo
+	cache   cache.Repo
 }
 
-func NewServer() Server {
-	return Server{}
+func NewServer(appConf *conf.AppConf,
+	dbRepo db.Repo, cacheRepo cache.Repo) Server {
+	return Server{
+		db:      dbRepo,
+		appConf: appConf,
+		cache:   cacheRepo,
+	}
 }
 
 func (s *Server) Init() {
-	gin.SetMode(config.Conf.Server.RunMode)
+	defer s.Clean() // 资源清理
+
+	gin.SetMode(conf.Conf.Server.RunMode)
 
 	route := gin.New()
 	router.Init(route)
 
 	endless.DefaultMaxHeaderBytes = 1 << 20
-	endless.DefaultReadTimeOut = config.Conf.Server.ReadTimeout
-	endless.DefaultWriteTimeOut = config.Conf.Server.WriteTimeout
-	endPoint := fmt.Sprintf(":%d", config.Conf.Server.HttpPort)
+	endless.DefaultReadTimeOut = conf.Conf.Server.ReadTimeout
+	endless.DefaultWriteTimeOut = conf.Conf.Server.WriteTimeout
+	endPoint := fmt.Sprintf(":%d", conf.Conf.Server.HttpPort)
 
 	server := endless.NewServer(endPoint, route)
 	server.BeforeBegin = func(add string) {
@@ -37,5 +49,22 @@ func (s *Server) Init() {
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Printf("Server err: %v", err)
+	}
+}
+
+func (s *Server) Clean() {
+	if s.db != nil {
+		if err := s.db.DbWClose(); err != nil {
+			log.Printf("dbw close err, %+v", err.Error())
+		}
+		if err := s.db.DbRClose(); err != nil {
+			log.Printf("dbw close err, %+v", err.Error())
+		}
+	}
+
+	if s.cache != nil {
+		if err := s.cache.Close(); err != nil {
+			log.Printf("ca close err, %+v", err.Error())
+		}
 	}
 }

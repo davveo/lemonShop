@@ -1,0 +1,6 @@
+appName: lemonShop
+server:
+  runmode: debug
+  httpPort: 8080
+  readTimeOut: 60
+  writeTimeOut: 60

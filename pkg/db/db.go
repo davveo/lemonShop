@@ -2,118 +2,123 @@ package db
 
 import (
 	"fmt"
-	"github.com/davveo/lemonShop/config"
+	"github.com/davveo/lemonShop/conf"
+	"github.com/pkg/errors"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm/schema"
 	"log"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-
 	"time"
+
+	"gorm.io/gorm"
 )
 
 var (
-	GDB *gorm.DB
+	GRpo Repo
 )
 
-func Init() error {
-	var (
-		err   error
-		dbCfg = config.Conf.DB
-	)
-	db, err := gorm.Open(dbCfg.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbCfg.User,
-		dbCfg.Password,
-		dbCfg.Host,
-		dbCfg.Name))
+var _ Repo = (*dbRepo)(nil)
+
+type Repo interface {
+	i()
+	GetDbR() *gorm.DB
+	GetDbW() *gorm.DB
+	DbRClose() error
+	DbWClose() error
+}
+
+type dbRepo struct {
+	DbR *gorm.DB
+	DbW *gorm.DB
+}
+
+func Init() (Repo, error) {
+	cfg := conf.Conf.Mysql
+	dbr, err := dbConnect(cfg.Read.User, cfg.Read.Pass, cfg.Read.Addr, cfg.Read.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	dbw, err := dbConnect(cfg.Write.User, cfg.Write.Pass, cfg.Write.Addr, cfg.Write.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	GRpo = &dbRepo{
+		DbR: dbr,
+		DbW: dbw,
+	}
+
+	return GRpo, nil
+}
+
+func (d *dbRepo) i() {}
+
+func (d *dbRepo) GetDbR() *gorm.DB {
+	return d.DbR
+}
+
+func (d *dbRepo) GetDbW() *gorm.DB {
+	return d.DbW
+}
+
+func (d *dbRepo) DbRClose() error {
+	sqlDB, err := d.DbR.DB()
+	if err != nil {
+		return err
+	}
+	log.Printf("[info] start to close ReadDb...")
+	return sqlDB.Close()
+}
+
+func (d *dbRepo) DbWClose() error {
+	sqlDB, err := d.DbW.DB()
+	if err != nil {
+		return err
+	}
+	log.Printf("[info] start to close writeDb...")
+	return sqlDB.Close()
+}
+
+func dbConnect(user, pass, addr, dbName string) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=%t&loc=%s",
+		user,
+		pass,
+		addr,
+		dbName,
+		true,
+		"Local")
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+		//Logger: logger.Default.LogMode(logger.Info), // 日志配置
+	})
 
 	if err != nil {
-		log.Fatalf("models.Setup err: %v", err)
+		return nil, errors.Wrap(err, fmt.Sprintf("[db connection failed] Database name: %s", dbName))
 	}
 
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return dbCfg.TablePrefix + defaultTableName
+	db.Set("gorm:table_options", "CHARSET=utf8mb4")
+
+	cfg := conf.Conf.Mysql.Base
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
 	}
 
-	db.SingularTable(true)
-	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
-	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(100)
+	// 设置连接池 用于设置最大打开的连接数，默认值为0表示不限制.设置最大的连接数，可以避免并发太高导致连接mysql出现too many connections的错误。
+	sqlDB.SetMaxOpenConns(cfg.MaxOpenConn)
 
-	GDB = db
+	// 设置最大连接数 用于设置闲置的连接数.设置闲置的连接数则当开启的一个连接使用完成后可以放在池里等候下一次使用。
+	sqlDB.SetMaxIdleConns(cfg.MaxIdleConn)
 
-	return nil
-}
+	// 设置最大连接超时
+	sqlDB.SetConnMaxLifetime(time.Minute * cfg.ConnMaxLifeTime)
 
-func CloseDB() {
-	defer func(GDB *gorm.DB) {
-		err := GDB.Close()
-		if err != nil {
-			fmt.Println("closeDB err, err: %+v", err)
-		}
-	}(GDB)
-}
+	// 使用插件
+	//db.Use(&TracePlugin{})
 
-// updateTimeStampForCreateCallback will set `CreatedOn`, `ModifiedOn` when creating
-func updateTimeStampForCreateCallback(scope *gorm.Scope) {
-	if !scope.HasError() {
-		nowTime := time.Now().Unix()
-		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
-			if createTimeField.IsBlank {
-				createTimeField.Set(nowTime)
-			}
-		}
-
-		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
-			if modifyTimeField.IsBlank {
-				modifyTimeField.Set(nowTime)
-			}
-		}
-	}
-}
-
-// updateTimeStampForUpdateCallback will set `ModifiedOn` when updating
-func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
-	if _, ok := scope.Get("gorm:update_column"); !ok {
-		scope.SetColumn("ModifiedOn", time.Now().Unix())
-	}
-}
-
-// deleteCallback will set `DeletedOn` where deleting
-func deleteCallback(scope *gorm.Scope) {
-	if !scope.HasError() {
-		var extraOption string
-		if str, ok := scope.Get("gorm:delete_option"); ok {
-			extraOption = fmt.Sprint(str)
-		}
-
-		deletedOnField, hasDeletedOnField := scope.FieldByName("DeletedOn")
-
-		if !scope.Search.Unscoped && hasDeletedOnField {
-			scope.Raw(fmt.Sprintf(
-				"UPDATE %v SET %v=%v%v%v",
-				scope.QuotedTableName(),
-				scope.Quote(deletedOnField.DBName),
-				scope.AddToVars(time.Now().Unix()),
-				addExtraSpaceIfExist(scope.CombinedConditionSql()),
-				addExtraSpaceIfExist(extraOption),
-			)).Exec()
-		} else {
-			scope.Raw(fmt.Sprintf(
-				"DELETE FROM %v%v%v",
-				scope.QuotedTableName(),
-				addExtraSpaceIfExist(scope.CombinedConditionSql()),
-				addExtraSpaceIfExist(extraOption),
-			)).Exec()
-		}
-	}
-}
-
-// addExtraSpaceIfExist adds a separator
-func addExtraSpaceIfExist(str string) string {
-	if str != "" {
-		return " " + str
-	}
-	return ""
+	return db, nil
 }

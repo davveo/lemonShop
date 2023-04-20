@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"github.com/davveo/lemonShop/config"
+	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/file"
 	"log"
 	"os"
@@ -35,7 +35,7 @@ const (
 func Init() error {
 	var (
 		err    error
-		logCfg = config.Conf.Log
+		logCfg = conf.Conf.Log
 	)
 
 	filePath := fmt.Sprintf("%s%s", logCfg.RuntimeRootPath, logCfg.LogSavePath)

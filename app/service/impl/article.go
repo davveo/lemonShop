@@ -7,6 +7,7 @@ import (
 	"github.com/davveo/lemonShop/dao"
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/cache"
+	dbLocal "github.com/davveo/lemonShop/pkg/db"
 	"github.com/davveo/lemonShop/pkg/log"
 )
 
@@ -30,7 +31,9 @@ type ArticleService struct {
 }
 
 func NewArticleService() ArticleService {
-	return ArticleService{}
+	return ArticleService{
+		articleRepo: dao.NewArticleDao(dbLocal.GRpo),
+	}
 }
 
 func (a *ArticleService) Add(ctx context.Context, req ArticleReq) error {
@@ -67,12 +70,12 @@ func (a *ArticleService) Get(ctx context.Context, req ArticleReq) (*models.Artic
 	var cacheArticle *models.Article
 	articleCache := cache_service.Article{ID: req.ID}
 	key := articleCache.GetArticleKey()
-	if cache.Exists(key) {
-		data, err := cache.Get(key)
+	if cache.Cache.Exists(key) {
+		data, err := cache.Cache.Get(key)
 		if err != nil {
 			log.Info(err)
 		} else {
-			json.Unmarshal(data, &cacheArticle)
+			json.Unmarshal([]byte(data), &cacheArticle)
 			return cacheArticle, nil
 		}
 	}
@@ -82,7 +85,7 @@ func (a *ArticleService) Get(ctx context.Context, req ArticleReq) (*models.Artic
 		return nil, err
 	}
 
-	cache.Set(key, article, 3600)
+	//cache.Cache.Set(key, article, 3600)
 	return article, nil
 }
 
@@ -99,12 +102,12 @@ func (a *ArticleService) GetAll(ctx context.Context, req ArticleReq) ([]*models.
 		PageSize: req.PageSize,
 	}
 	key := articleCache.GetArticlesKey()
-	if cache.Exists(key) {
-		data, err := cache.Get(key)
+	if cache.Cache.Exists(key) {
+		data, err := cache.Cache.Get(key)
 		if err != nil {
 			log.Info(err)
 		} else {
-			json.Unmarshal(data, &cacheArticles)
+			json.Unmarshal([]byte(data), &cacheArticles)
 			return cacheArticles, nil
 		}
 	}
@@ -114,7 +117,7 @@ func (a *ArticleService) GetAll(ctx context.Context, req ArticleReq) ([]*models.
 		return nil, err
 	}
 
-	cache.Set(key, articles, 3600)
+	//cache.Set(key, articles, 3600)
 	return articles, nil
 }
 
@@ -126,7 +129,7 @@ func (a *ArticleService) ExistByID(ctx context.Context, req ArticleReq) (bool, e
 	return a.articleRepo.ExistArticleByID(req.ID)
 }
 
-func (a *ArticleService) Count(ctx context.Context, req ArticleReq) (int, error) {
+func (a *ArticleService) Count(ctx context.Context, req ArticleReq) (int64, error) {
 	return a.articleRepo.GetArticleTotal(a.getMaps(ctx, req))
 }
 

@@ -2,24 +2,27 @@ package dao
 
 import (
 	"github.com/davveo/lemonShop/models"
-	dbLocal "github.com/davveo/lemonShop/pkg/db"
-	"github.com/jinzhu/gorm"
+	"github.com/davveo/lemonShop/pkg/db"
+	"gorm.io/gorm"
 )
 
 type ArticleDao struct {
-	db *gorm.DB
+	repo db.Repo
 }
 
-func NewArticleDao(db *gorm.DB) ArticleDao {
+func NewArticleDao(db db.Repo) ArticleDao {
 	return ArticleDao{
-		db: dbLocal.GDB,
+		repo: db,
 	}
 }
 
 // ExistArticleByID checks if an article exists based on ID
 func (articleDao ArticleDao) ExistArticleByID(id int) (bool, error) {
 	var article models.Article
-	err := articleDao.db.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
+
+	readDB := articleDao.repo.GetDbR()
+
+	err := readDB.Select("id").Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return false, err
 	}
@@ -32,9 +35,11 @@ func (articleDao ArticleDao) ExistArticleByID(id int) (bool, error) {
 }
 
 // GetArticleTotal gets the total number of articles based on the constraints
-func (articleDao ArticleDao) GetArticleTotal(maps interface{}) (int, error) {
-	var count int
-	if err := articleDao.db.Model(&models.Article{}).Where(maps).Count(&count).Error; err != nil {
+func (articleDao ArticleDao) GetArticleTotal(maps interface{}) (int64, error) {
+	var count int64
+	readDB := articleDao.repo.GetDbR()
+
+	if err := readDB.Model(&models.Article{}).Where(maps).Count(&count).Error; err != nil {
 		return 0, err
 	}
 
@@ -44,7 +49,9 @@ func (articleDao ArticleDao) GetArticleTotal(maps interface{}) (int, error) {
 // GetArticles gets a list of articles based on paging constraints
 func (articleDao ArticleDao) GetArticles(pageNum int, pageSize int, maps interface{}) ([]*models.Article, error) {
 	var articles []*models.Article
-	err := articleDao.db.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles).Error
+	readDB := articleDao.repo.GetDbR()
+
+	err := readDB.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -55,12 +62,8 @@ func (articleDao ArticleDao) GetArticles(pageNum int, pageSize int, maps interfa
 // GetArticle Get a single article based on ID
 func (articleDao ArticleDao) GetArticle(id int) (*models.Article, error) {
 	var article models.Article
-	err := articleDao.db.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
-	}
-
-	err = articleDao.db.Model(&article).Related(&article.Tag).Error
+	readDB := articleDao.repo.GetDbR()
+	err := readDB.Where("id = ? AND deleted_on = ? ", id, 0).First(&article).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -70,7 +73,8 @@ func (articleDao ArticleDao) GetArticle(id int) (*models.Article, error) {
 
 // EditArticle modify a single article
 func (articleDao ArticleDao) EditArticle(id int, data interface{}) error {
-	if err := articleDao.db.Model(&models.Article{}).Where("id = ? AND deleted_on = ? ", id, 0).Updates(data).Error; err != nil {
+	writeDB := articleDao.repo.GetDbW()
+	if err := writeDB.Model(&models.Article{}).Where("id = ? AND deleted_on = ? ", id, 0).Updates(data).Error; err != nil {
 		return err
 	}
 
@@ -88,7 +92,8 @@ func (articleDao ArticleDao) AddArticle(data map[string]interface{}) error {
 		State:         data["state"].(int),
 		CoverImageUrl: data["cover_image_url"].(string),
 	}
-	if err := articleDao.db.Create(&article).Error; err != nil {
+	writeDB := articleDao.repo.GetDbW()
+	if err := writeDB.Create(&article).Error; err != nil {
 		return err
 	}
 
@@ -97,7 +102,8 @@ func (articleDao ArticleDao) AddArticle(data map[string]interface{}) error {
 
 // DeleteArticle delete a single article
 func (articleDao ArticleDao) DeleteArticle(id int) error {
-	if err := articleDao.db.Where("id = ?", id).Delete(models.Article{}).Error; err != nil {
+	writeDB := articleDao.repo.GetDbW()
+	if err := writeDB.Where("id = ?", id).Delete(models.Article{}).Error; err != nil {
 		return err
 	}
 
@@ -106,7 +112,8 @@ func (articleDao ArticleDao) DeleteArticle(id int) error {
 
 // CleanAllArticle clear all article
 func (articleDao ArticleDao) CleanAllArticle() error {
-	if err := articleDao.db.Unscoped().Where("deleted_on != ? ", 0).Delete(&models.Article{}).Error; err != nil {
+	writeDB := articleDao.repo.GetDbW()
+	if err := writeDB.Unscoped().Where("deleted_on != ? ", 0).Delete(&models.Article{}).Error; err != nil {
 		return err
 	}
 

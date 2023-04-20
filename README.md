@@ -41,7 +41,7 @@ IdleTimeout = 200
 ```
 $ cd $GOPATH/src/lemonShop
 
-$ go run main.go 
+$ active=dev go run main.go # conf-dev配置前置
 ```
 
 项目的运行信息和已存在的 API's

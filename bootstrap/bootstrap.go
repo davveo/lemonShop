@@ -2,7 +2,7 @@ package bootstrap
 
 import (
 	"github.com/davveo/lemonShop/app"
-	"github.com/davveo/lemonShop/config"
+	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/cache"
 	"github.com/davveo/lemonShop/pkg/db"
 	"github.com/davveo/lemonShop/pkg/log"
@@ -10,7 +10,8 @@ import (
 
 func Bootstrap() {
 	// 初始化配置
-	if err := config.Init(); err != nil {
+	appConf, err := conf.Init()
+	if err != nil {
 		panic(err)
 	}
 
@@ -20,16 +21,18 @@ func Bootstrap() {
 	}
 
 	// 初始化数据
-	if err := db.Init(); err != nil {
+	dbRepo, err := db.Init()
+	if err != nil {
 		panic(err)
 	}
 
 	// 初始化缓存
-	if err := cache.Init(); err != nil {
+	cacheRepo, err := cache.Init()
+	if err != nil {
 		panic(err)
 	}
 
 	// 服务启动
-	server := app.NewServer()
+	server := app.NewServer(appConf, dbRepo, cacheRepo)
 	server.Init()
 }
