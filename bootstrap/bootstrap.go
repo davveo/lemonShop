@@ -5,7 +5,7 @@ import (
 	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/cache"
 	"github.com/davveo/lemonShop/pkg/db"
-	"github.com/davveo/lemonShop/pkg/log"
+	"github.com/davveo/lemonShop/pkg/logger"
 )
 
 func Bootstrap() {
@@ -16,7 +16,8 @@ func Bootstrap() {
 	}
 
 	// 初始化日志
-	if err := log.Init(); err != nil {
+	gLogger, err := logger.Init()
+	if err != nil {
 		panic(err)
 	}
 
@@ -33,6 +34,6 @@ func Bootstrap() {
 	}
 
 	// 服务启动
-	server := app.NewServer(appConf, dbRepo, cacheRepo)
+	server := app.NewServer(appConf, gLogger, dbRepo, cacheRepo)
 	server.Init()
 }

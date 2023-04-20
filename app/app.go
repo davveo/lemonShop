@@ -8,20 +8,22 @@ import (
 	"github.com/davveo/lemonShop/pkg/db"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"log"
 	"syscall"
 )
 
 type Server struct {
-	appConf *conf.AppConf
 	db      db.Repo
 	cache   cache.Repo
+	lg      *zap.Logger
+	appConf *conf.AppConf
 }
 
-func NewServer(appConf *conf.AppConf,
-	dbRepo db.Repo, cacheRepo cache.Repo) Server {
+func NewServer(appConf *conf.AppConf, lg *zap.Logger, dbRepo db.Repo, cacheRepo cache.Repo) Server {
 	return Server{
 		db:      dbRepo,
+		lg:      lg,
 		appConf: appConf,
 		cache:   cacheRepo,
 	}
@@ -42,8 +44,8 @@ func (s *Server) Init() {
 
 	server := endless.NewServer(endPoint, route)
 	server.BeforeBegin = func(add string) {
-		log.Printf("[info] pid is %d, start "+
-			"http server listening %s", syscall.Getpid(), endPoint)
+		s.lg.Debug(fmt.Sprintf("[info] pid is %d, start "+
+			"http server listening %s", syscall.Getpid(), endPoint))
 	}
 
 	err := server.ListenAndServe()
@@ -55,16 +57,24 @@ func (s *Server) Init() {
 func (s *Server) Clean() {
 	if s.db != nil {
 		if err := s.db.DbWClose(); err != nil {
-			log.Printf("dbw close err, %+v", err.Error())
+			s.lg.Info("dbw close err, ", zap.Error(err))
+			return
 		}
 		if err := s.db.DbRClose(); err != nil {
-			log.Printf("dbw close err, %+v", err.Error())
+			s.lg.Info("dbr close err, ", zap.Error(err))
+			return
 		}
 	}
 
 	if s.cache != nil {
 		if err := s.cache.Close(); err != nil {
-			log.Printf("ca close err, %+v", err.Error())
+			s.lg.Info("cache close err, ", zap.Error(err))
+			return
 		}
+	}
+
+	if err := s.lg.Sync(); err != nil {
+		s.lg.Info("log sync err, ", zap.Error(err))
+		return
 	}
 }

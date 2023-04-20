@@ -8,7 +8,8 @@ import (
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/cache"
 	dbLocal "github.com/davveo/lemonShop/pkg/db"
-	"github.com/davveo/lemonShop/pkg/log"
+	"github.com/davveo/lemonShop/pkg/logger"
+	"go.uber.org/zap"
 )
 
 type ArticleReq struct {
@@ -73,7 +74,7 @@ func (a *ArticleService) Get(ctx context.Context, req ArticleReq) (*models.Artic
 	if cache.Cache.Exists(key) {
 		data, err := cache.Cache.Get(key)
 		if err != nil {
-			log.Info(err)
+			logger.GLogger.Info("get from cache err, ", zap.Error(err))
 		} else {
 			json.Unmarshal([]byte(data), &cacheArticle)
 			return cacheArticle, nil
@@ -105,7 +106,7 @@ func (a *ArticleService) GetAll(ctx context.Context, req ArticleReq) ([]*models.
 	if cache.Cache.Exists(key) {
 		data, err := cache.Cache.Get(key)
 		if err != nil {
-			log.Info(err)
+			logger.GLogger.Info("get from cache err ", zap.Error(err))
 		} else {
 			json.Unmarshal([]byte(data), &cacheArticles)
 			return cacheArticles, nil

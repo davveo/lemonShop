@@ -1,7 +1,6 @@
 package cache_service
 
 import (
-	"github.com/davveo/lemonShop/pkg/e"
 	"strconv"
 	"strings"
 )
@@ -16,12 +15,12 @@ type Article struct {
 }
 
 func (a *Article) GetArticleKey() string {
-	return e.CACHE_ARTICLE + "_" + strconv.Itoa(a.ID)
+	return "ARTICLE" + "_" + strconv.Itoa(a.ID)
 }
 
 func (a *Article) GetArticlesKey() string {
 	keys := []string{
-		e.CACHE_ARTICLE,
+		"ARTICLE",
 		"LIST",
 	}
 

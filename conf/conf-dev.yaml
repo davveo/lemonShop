@@ -1,9 +1,6 @@
 log:
-    runtimeRootPath: runtime/
-    logSavePath: logs/
-    logSaveName: log
-    logFileExt: log
-    timeFormat: 20060102
+    logSavePath: runtime/logs/access.log
+    timeFormat: 2006-01-02 15:04:05
 mysql:
     base:
         connMaxLifetime: 60

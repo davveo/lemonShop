@@ -55,9 +55,6 @@ type RedisCfg struct {
 }
 
 type LogCfg struct {
-	RuntimeRootPath string `yaml:"runtimeRootPath"`
-	LogSavePath     string `yaml:"logSavePath"`
-	LogSaveName     string `yaml:"logSaveName"`
-	LogFileExt      string `yaml:"logFileExt"`
-	TimeFormat      string `yaml:"timeFormat"`
+	LogSavePath string `yaml:"logSavePath"`
+	TimeFormat  string `yaml:"timeFormat"`
 }
