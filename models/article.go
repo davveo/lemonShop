@@ -1,7 +1,10 @@
 package models
 
 type Article struct {
-	Model
+	ID         int `gorm:"primary_key" json:"id"`
+	CreatedOn  int `json:"created_on"`
+	ModifiedOn int `json:"modified_on"`
+	DeletedOn  int `json:"deleted_on"`
 
 	TagID int `json:"tag_id" gorm:"index"`
 	Tag   Tag `json:"tag"`

@@ -34,7 +34,7 @@ self_type_define: # 自定义数据类型映射
   time: time.Time
   ^(int)[(]\d+[)]: int
 out_file_name: "" # 自定义生成文件名
-web_tag_type: 0 # json tag类型 0: 小驼峰 1: 下划线
+web_tag_type: 1 # json tag类型 0: 小驼峰 1: 下划线
 
 # sqlite
 # db_info:

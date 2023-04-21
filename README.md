@@ -67,6 +67,9 @@ Listening port is 8000
 Actual pid is 4393
 ```
 
+## 参考
+- https://github.com/xxjwxc/gormt/blob/master/data/view/genfunc/genfunc_test.go
+
 
 ## 特性
 

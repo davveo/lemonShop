@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/davveo/lemonShop/app/service"
-	"github.com/davveo/lemonShop/dao"
+	"github.com/davveo/lemonShop/mgr"
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/cache"
 	dbLocal "github.com/davveo/lemonShop/pkg/db"
@@ -28,12 +28,12 @@ type ArticleReq struct {
 }
 
 type ArticleService struct {
-	articleRepo dao.ArticleDao
+	articleRepo mgr.ArticleDao
 }
 
 func NewArticleService() ArticleService {
 	return ArticleService{
-		articleRepo: dao.NewArticleDao(dbLocal.GRpo),
+		articleRepo: mgr.NewArticleDao(dbLocal.GRpo),
 	}
 }
 

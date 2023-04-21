@@ -1,4 +1,4 @@
-package dao
+package mgr
 
 import (
 	"github.com/davveo/lemonShop/models"

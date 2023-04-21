@@ -5,6 +5,7 @@ import (
 	"github.com/davveo/lemonShop/conf"
 	"github.com/pkg/errors"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"log"
 	"time"
@@ -92,7 +93,7 @@ func dbConnect(user, pass, addr, dbName string) (*gorm.DB, error) {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		//Logger: logger.Default.LogMode(logger.Info), // 日志配置
+		Logger: logger.Default.LogMode(logger.Info), // 日志配置
 	})
 
 	if err != nil {

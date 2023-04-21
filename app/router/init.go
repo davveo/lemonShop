@@ -14,11 +14,20 @@ func Init(route *gin.Engine) {
 	checkCTRS := ctrs.NewCheckerController()
 	{
 		publicGroup.GET("check", checkCTRS.Check)
-		AdminRouterGroup(publicGroup)
 	}
 
-	//privateGroup := r.Group("/api/v1")
-	//{
-	//
-	//}
+	adminGroup := route.Group("/admin/admin")
+	{
+		AdminRouterGroup(adminGroup)
+	}
+
+	buyerGroup := route.Group("/buyer/buyer")
+	{
+		BuyerRouterGroup(buyerGroup)
+	}
+
+	sellerGroup := route.Group("/seller/seller")
+	{
+		SellerRouterGroup(sellerGroup)
+	}
 }
