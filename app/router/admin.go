@@ -27,12 +27,12 @@ func AdminRouterGroup(router *gin.RouterGroup) {
 		// done 查询规格项列表
 		goodsGroup.GET("/specs", specsController.SpecsList)
 		// done 添加规格项
-		//goodsGroup.POST("admin/goods/specs", specsController.CreateSpecs)
-		//// done 修改规格项
-		//goodsGroup.PUT("admin/goods/specs/:spec_id", admin.UpdateSpecs)
-		//// done 删除规格项
-		//goodsGroup.DELETE("admin/goods/specs/:spec_id", admin.DeleteSpecs)
-		//// done 查询一个规格项
+		goodsGroup.POST("admin/goods/specs", specsController.Create)
+		// done 修改规格项
+		goodsGroup.PUT("admin/goods/specs/:spec_id", specsController.Update)
+		// done 删除规格项
+		goodsGroup.DELETE("admin/goods/specs/:spec_id", specsController.Delete)
+		// done 查询一个规格项
 		goodsGroup.GET("/specs/:spec_id", specsController.Specs)
 		//// done 查询规格值列表
 		//goodsGroup.GET("admin/goods/specs/:spec_id/values", admin.SpecsValues)
