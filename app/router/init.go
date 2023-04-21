@@ -1,8 +1,8 @@
 package router
 
 import (
+	"github.com/davveo/lemonShop/app/ctrs"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func Init(route *gin.Engine) {
@@ -10,10 +10,10 @@ func Init(route *gin.Engine) {
 	route.Use(gin.Recovery())
 
 	publicGroup := route.Group("/api/v1")
+
+	checkCTRS := ctrs.NewCheckerController()
 	{
-		publicGroup.GET("health", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"ok": true})
-		})
+		publicGroup.GET("check", checkCTRS.Check)
 		AdminRouterGroup(publicGroup)
 	}
 

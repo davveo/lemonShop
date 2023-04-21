@@ -44,13 +44,14 @@ func (s *Server) Init() {
 
 	server := endless.NewServer(endPoint, route)
 	server.BeforeBegin = func(add string) {
-		s.lg.Debug(fmt.Sprintf("[info] pid is %d, start "+
-			"http server listening %s", syscall.Getpid(), endPoint))
+		log.Printf("[info] pid is %d, start "+
+			"http server listening %s", syscall.Getpid(), endPoint)
 	}
 
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Printf("Server err: %v", err)
+		return
 	}
 }
 

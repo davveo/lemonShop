@@ -1,8 +1,9 @@
-package controller
+package ctrs
 
 import (
 	"context"
 	"github.com/astaxie/beego/validation"
+	"github.com/davveo/lemonShop/app/consts"
 	"github.com/davveo/lemonShop/app/entity"
 	"github.com/davveo/lemonShop/app/service/impl"
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,6 @@ import (
 	"net/http"
 
 	"github.com/davveo/lemonShop/pkg/app"
-	"github.com/davveo/lemonShop/pkg/errors"
 	"github.com/davveo/lemonShop/pkg/util"
 )
 
@@ -18,44 +18,44 @@ type ArticleController struct {
 	articleService impl.ArticleService
 }
 
-func NewArticleController() ArticleController {
-	return ArticleController{
+func NewArticleController() *ArticleController {
+	return &ArticleController{
 		articleService: impl.NewArticleService(),
 	}
 }
 
-func (ac ArticleController) GetArticle(c *gin.Context) {
+func (ac *ArticleController) GetArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id")
 
 	if valid.HasErrors() {
-		appG.Response(http.StatusBadRequest, errors.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, consts.INVALID_PARAMS, nil)
 		return
 	}
 
 	req := impl.ArticleReq{ID: id}
 	exists, err := ac.articleService.ExistByID(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
-		appG.Response(http.StatusOK, errors.ERROR_NOT_EXIST_ARTICLE, nil)
+		appG.Response(http.StatusOK, consts.ERROR_NOT_EXIST_ARTICLE, nil)
 		return
 	}
 
 	article, err := ac.articleService.Get(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_GET_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_GET_ARTICLE_FAIL, nil)
 		return
 	}
 
-	appG.Response(http.StatusOK, errors.SUCCESS, article)
+	appG.Response(http.StatusOK, consts.SUCCESS, article)
 }
 
-func (ac ArticleController) GetArticles(c *gin.Context) {
+func (ac *ArticleController) GetArticles(c *gin.Context) {
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
@@ -72,7 +72,7 @@ func (ac ArticleController) GetArticles(c *gin.Context) {
 	}
 
 	if valid.HasErrors() {
-		appG.Response(http.StatusBadRequest, errors.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, consts.INVALID_PARAMS, nil)
 		return
 	}
 
@@ -85,13 +85,13 @@ func (ac ArticleController) GetArticles(c *gin.Context) {
 
 	total, err := ac.articleService.Count(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_COUNT_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_COUNT_ARTICLE_FAIL, nil)
 		return
 	}
 
 	articles, err := ac.articleService.GetAll(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_GET_ARTICLES_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_GET_ARTICLES_FAIL, nil)
 		return
 	}
 
@@ -99,17 +99,17 @@ func (ac ArticleController) GetArticles(c *gin.Context) {
 	data["lists"] = articles
 	data["total"] = total
 
-	appG.Response(http.StatusOK, errors.SUCCESS, data)
+	appG.Response(http.StatusOK, consts.SUCCESS, data)
 }
 
-func (ac ArticleController) AddArticle(c *gin.Context) {
+func (ac *ArticleController) AddArticle(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
 		form entity.AddArticleForm
 	)
 
 	httpCode, errCode := app.BindAndValid(c, &form)
-	if errCode != errors.SUCCESS {
+	if errCode != consts.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
 		return
 	}
@@ -136,21 +136,21 @@ func (ac ArticleController) AddArticle(c *gin.Context) {
 		CreatedBy:     form.CreatedBy,
 	}
 	if err := ac.articleService.Add(context.Background(), articleReq); err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_ADD_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_ADD_ARTICLE_FAIL, nil)
 		return
 	}
 
-	appG.Response(http.StatusOK, errors.SUCCESS, nil)
+	appG.Response(http.StatusOK, consts.SUCCESS, nil)
 }
 
-func (ac ArticleController) EditArticle(c *gin.Context) {
+func (ac *ArticleController) EditArticle(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
 		form = entity.EditArticleForm{ID: com.StrTo(c.Param("id")).MustInt()}
 	)
 
 	httpCode, errCode := app.BindAndValid(c, &form)
-	if errCode != errors.SUCCESS {
+	if errCode != consts.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
 		return
 	}
@@ -167,11 +167,11 @@ func (ac ArticleController) EditArticle(c *gin.Context) {
 	}
 	exists, err := ac.articleService.ExistByID(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
-		appG.Response(http.StatusOK, errors.ERROR_NOT_EXIST_ARTICLE, nil)
+		appG.Response(http.StatusOK, consts.ERROR_NOT_EXIST_ARTICLE, nil)
 		return
 	}
 
@@ -193,36 +193,36 @@ func (ac ArticleController) EditArticle(c *gin.Context) {
 	//	return
 	//}
 
-	appG.Response(http.StatusOK, errors.SUCCESS, nil)
+	appG.Response(http.StatusOK, consts.SUCCESS, nil)
 }
 
-func (ac ArticleController) DeleteArticle(c *gin.Context) {
+func (ac *ArticleController) DeleteArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
 	if valid.HasErrors() {
-		appG.Response(http.StatusOK, errors.INVALID_PARAMS, nil)
+		appG.Response(http.StatusOK, consts.INVALID_PARAMS, nil)
 		return
 	}
 
 	req := impl.ArticleReq{ID: id}
 	exists, err := ac.articleService.ExistByID(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_CHECK_EXIST_ARTICLE_FAIL, nil)
 		return
 	}
 	if !exists {
-		appG.Response(http.StatusOK, errors.ERROR_NOT_EXIST_ARTICLE, nil)
+		appG.Response(http.StatusOK, consts.ERROR_NOT_EXIST_ARTICLE, nil)
 		return
 	}
 
 	err = ac.articleService.Delete(context.Background(), req)
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, errors.ERROR_DELETE_ARTICLE_FAIL, nil)
+		appG.Response(http.StatusInternalServerError, consts.ERROR_DELETE_ARTICLE_FAIL, nil)
 		return
 	}
 
-	appG.Response(http.StatusOK, errors.SUCCESS, nil)
+	appG.Response(http.StatusOK, consts.SUCCESS, nil)
 }

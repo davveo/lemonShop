@@ -3,7 +3,7 @@ package impl
 import (
 	"context"
 	"encoding/json"
-	"github.com/davveo/lemonShop/app/cache_service"
+	"github.com/davveo/lemonShop/app/service"
 	"github.com/davveo/lemonShop/dao"
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/cache"
@@ -69,7 +69,7 @@ func (a *ArticleService) Edit(ctx context.Context, req ArticleReq) error {
 
 func (a *ArticleService) Get(ctx context.Context, req ArticleReq) (*models.Article, error) {
 	var cacheArticle *models.Article
-	articleCache := cache_service.Article{ID: req.ID}
+	articleCache := service.Article{ID: req.ID}
 	key := articleCache.GetArticleKey()
 	if cache.Cache.Exists(key) {
 		data, err := cache.Cache.Get(key)
@@ -95,7 +95,7 @@ func (a *ArticleService) GetAll(ctx context.Context, req ArticleReq) ([]*models.
 		articles, cacheArticles []*models.Article
 	)
 
-	articleCache := cache_service.Article{
+	articleCache := service.Article{
 		TagID: req.TagID,
 		State: req.State,
 

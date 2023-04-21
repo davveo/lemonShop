@@ -1,4 +1,4 @@
-package cache_service
+package service
 
 import (
 	"strconv"

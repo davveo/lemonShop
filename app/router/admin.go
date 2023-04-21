@@ -1,13 +1,13 @@
 package router
 
 import (
-	"github.com/davveo/lemonShop/app/controller"
+	"github.com/davveo/lemonShop/app/ctrs"
 	"github.com/gin-gonic/gin"
 )
 
 func AdminRouterGroup(router *gin.RouterGroup) {
 	adminGroup := router.Group("/api/v1")
-	articleController := controller.NewArticleController()
+	articleController := ctrs.NewArticleController()
 	{
 		//获取文章列表
 		adminGroup.GET("/articles", articleController.GetArticles)
