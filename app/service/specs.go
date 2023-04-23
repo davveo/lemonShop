@@ -105,7 +105,6 @@ func (s *specsService) Update(ctx *gin.Context, specs *entity.Specs) error {
 }
 
 func (s *specsService) Delete(ctx *gin.Context, req []int64) error {
-	s.specificationMgr.GetByOptions()
 	return nil
 }
 

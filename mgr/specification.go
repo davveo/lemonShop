@@ -29,12 +29,6 @@ func (obj *SpecificationMgr) GetTableName() string {
 	return "es_specification"
 }
 
-// Reset 重置gorm会话
-func (obj *SpecificationMgr) Reset() *SpecificationMgr {
-	obj.New()
-	return obj
-}
-
 // Get 获取
 func (obj *SpecificationMgr) Get() (result models.EsSpecification, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).First(&result).Error
@@ -42,21 +36,9 @@ func (obj *SpecificationMgr) Get() (result models.EsSpecification, err error) {
 	return
 }
 
-// Gets 获取批量结果
-func (obj *SpecificationMgr) Gets() (results []*models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Find(&results).Error
-
-	return
-}
-
-// //////////////////////////////// gorm replace /////////////////////////////////
 func (obj *SpecificationMgr) Count(count *int64) (tx *gorm.DB) {
 	return obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Count(count)
 }
-
-//////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////option case ////////////////////////////////////////////
 
 // WithSpecID spec_id获取 主键
 func (obj *SpecificationMgr) WithSpecID(specID int) Option {
@@ -134,8 +116,6 @@ func (obj *SpecificationMgr) SelectPage(page IPage, opts ...Option) (resultPage 
 	return
 }
 
-//////////////////////////enume case ////////////////////////////////////////////
-
 // GetFromSpecID 通过spec_id获取内容 主键
 func (obj *SpecificationMgr) GetFromSpecID(specID int) (result models.EsSpecification, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_id` = ?", specID).First(&result).Error
@@ -164,34 +144,6 @@ func (obj *SpecificationMgr) GetBatchFromSpecName(specNames []string) (results [
 	return
 }
 
-// GetFromDisabled 通过disabled获取内容 是否被删除0 删除   1  没有删除
-func (obj *SpecificationMgr) GetFromDisabled(disabled int) (results []*models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`disabled` = ?", disabled).Find(&results).Error
-
-	return
-}
-
-// GetBatchFromDisabled 批量查找 是否被删除0 删除   1  没有删除
-func (obj *SpecificationMgr) GetBatchFromDisabled(disableds []int) (results []*models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`disabled` IN (?)", disableds).Find(&results).Error
-
-	return
-}
-
-// GetFromSpecMemo 通过spec_memo获取内容 规格描述
-func (obj *SpecificationMgr) GetFromSpecMemo(specMemo string) (results []*models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_memo` = ?", specMemo).Find(&results).Error
-
-	return
-}
-
-// GetBatchFromSpecMemo 批量查找 规格描述
-func (obj *SpecificationMgr) GetBatchFromSpecMemo(specMemos []string) (results []*models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_memo` IN (?)", specMemos).Find(&results).Error
-
-	return
-}
-
 // GetFromSellerID 通过seller_id获取内容 所属卖家
 func (obj *SpecificationMgr) GetFromSellerID(sellerID int) (results []*models.EsSpecification, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`seller_id` = ?", sellerID).Find(&results).Error
@@ -205,8 +157,6 @@ func (obj *SpecificationMgr) GetBatchFromSellerID(sellerIDs []int) (results []*m
 
 	return
 }
-
-//////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
 func (obj *SpecificationMgr) FetchByPrimaryKey(specID int) (result *models.EsSpecification, err error) {
@@ -226,6 +176,10 @@ func (obj *SpecificationMgr) Update(specID int, updates map[string]interface{}) 
 		Where("`spec_id` = ?", specID).Updates(updates).Error
 
 	return
+}
+
+func (obj *SpecificationMgr) DeleteBatch(specIDs []int) (err error) {
+	return nil
 }
 
 func (obj *SpecificationMgr) Raw(sql string, values ...interface{}) (err error) {
