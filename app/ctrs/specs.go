@@ -34,47 +34,47 @@ func (s *SpecsController) SpecsList(ctx *gin.Context) {
 }
 
 func (s *SpecsController) Specs(ctx *gin.Context) {
-	var req entity.SpecsRequest
-	if err := ctx.ShouldBindUri(&req); err != nil {
+	var specs entity.Specs
+	if err := ctx.ShouldBindUri(&specs); err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
-	obj, err := s.SpecsService.Get(ctx, &req)
+	err := s.SpecsService.Get(ctx, &specs)
 	if err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
-	reply.Reply(ctx, obj)
+	reply.Reply(ctx, specs)
 }
 
 func (s *SpecsController) Create(ctx *gin.Context) {
-	var req entity.SpecsCreateRequest
-	if err := ctx.ShouldBind(&req); err != nil {
+	var specs entity.Specs
+	if err := ctx.ShouldBind(&specs); err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
 
-	spec, err := s.SpecsService.Create(ctx, &req)
+	err := s.SpecsService.Create(ctx, &specs)
 	if err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
-	reply.Reply(ctx, spec)
+	reply.Reply(ctx, specs)
 }
 
 func (s *SpecsController) Update(ctx *gin.Context) {
-	var req entity.SpecsUpdateRequest
-	if err := ctx.ShouldBind(&req); err != nil {
+	var specs entity.Specs
+	if err := ctx.ShouldBind(&specs); err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
 
-	spec, err := s.SpecsService.Update(ctx, &req)
+	err := s.SpecsService.Update(ctx, &specs)
 	if err != nil {
 		reply.ReplyInternalErr(ctx, err.Error())
 		return
 	}
-	reply.Reply(ctx, spec)
+	reply.Reply(ctx, specs)
 }
 
 func (s *SpecsController) Delete(ctx *gin.Context) {

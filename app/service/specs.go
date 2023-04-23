@@ -1,8 +1,11 @@
 package service
 
 import (
+	"errors"
+	"github.com/davveo/lemonShop/app/consts"
 	"github.com/davveo/lemonShop/app/entity"
 	"github.com/davveo/lemonShop/mgr"
+	"github.com/davveo/lemonShop/models"
 	dbLocal "github.com/davveo/lemonShop/pkg/db"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -12,10 +15,10 @@ var _ SpecsService = (*specsService)(nil)
 
 type SpecsService interface {
 	i()
-	List(ctx *gin.Context, req *entity.SpecsListRequest) (*entity.SpecsListResp, error)
-	Get(ctx *gin.Context, req *entity.SpecsRequest) (*entity.SpecsBase, error)
-	Create(ctx *gin.Context, req *entity.SpecsCreateRequest) (*entity.SpecsBase, error)
-	Update(ctx *gin.Context, req *entity.SpecsUpdateRequest) (*entity.SpecsBase, error)
+	List(ctx *gin.Context, req *entity.SpecsListRequest) (*entity.List, error)
+	Get(ctx *gin.Context, req *entity.Specs) error
+	Create(ctx *gin.Context, req *entity.Specs) error
+	Update(ctx *gin.Context, req *entity.Specs) error
 	Delete(ctx *gin.Context, req []int64) error
 }
 
@@ -29,10 +32,10 @@ func NewSpecsService() SpecsService {
 	}
 }
 
-func (s *specsService) List(ctx *gin.Context, req *entity.SpecsListRequest) (*entity.SpecsListResp, error) {
+func (s *specsService) List(ctx *gin.Context, req *entity.SpecsListRequest) (*entity.List, error) {
 	ops := []mgr.Option{
-		s.specificationMgr.WithDisabled(1),
-		s.specificationMgr.WithSellerID(0),
+		s.specificationMgr.WithDisabled(consts.DefaultDisabled),
+		s.specificationMgr.WithSellerID(consts.DefaultSellerId),
 	}
 	if req.KeyWord != "" {
 		ops = append(ops, s.specificationMgr.WithSpecName(req.KeyWord))
@@ -44,7 +47,7 @@ func (s *specsService) List(ctx *gin.Context, req *entity.SpecsListRequest) (*en
 		return nil, err
 	}
 
-	return &entity.SpecsListResp{
+	return &entity.List{
 		PageNo:    req.PageNo,
 		PageSize:  req.PageSize,
 		DataTotal: resultPage.GetTotal(),
@@ -52,30 +55,57 @@ func (s *specsService) List(ctx *gin.Context, req *entity.SpecsListRequest) (*en
 	}, nil
 }
 
-func (s *specsService) Get(ctx *gin.Context, req *entity.SpecsRequest) (*entity.SpecsBase, error) {
-	rt := new(entity.SpecsBase)
-	obj, err := s.specificationMgr.FetchByPrimaryKey(int(req.SpecId))
+func (s *specsService) Get(ctx *gin.Context, specs *entity.Specs) error {
+	obj, err := s.specificationMgr.FetchByPrimaryKey(int(specs.SpecID))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if err = copier.Copy(rt, &obj); err != nil {
-		return nil, err
+	if err = copier.Copy(specs, obj); err != nil {
+		return err
 	}
-	return rt, nil
+	return nil
 }
 
-func (s *specsService) Create(ctx *gin.Context, req *entity.SpecsCreateRequest) (*entity.SpecsBase, error) {
-	// extra params
-	//mapData["seller_id"] = "0"
-	//mapData["disabled"] = 1
-	return nil, nil
+func (s *specsService) Create(ctx *gin.Context, specs *entity.Specs) error {
+	ops := []mgr.Option{
+		s.specificationMgr.WithDisabled(consts.DefaultDisabled),
+		s.specificationMgr.WithSellerID(consts.DefaultSellerId),
+		s.specificationMgr.WithSpecName(specs.SpecName),
+	}
+	list, err := s.specificationMgr.GetByOptions(ops...)
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		return errors.New("规格名称重复")
+	}
+	specs.Disabled = consts.DefaultDisabled
+	specification := new(models.EsSpecification)
+	if err := copier.Copy(specification, specs); err != nil {
+		return err
+	}
+	if err := s.specificationMgr.Create(specification); err != nil {
+		return err
+	}
+
+	specs.SpecID = specification.SpecID
+	return nil
 }
 
-func (s *specsService) Update(ctx *gin.Context, req *entity.SpecsUpdateRequest) (*entity.SpecsBase, error) {
-	return nil, nil
+func (s *specsService) Update(ctx *gin.Context, specs *entity.Specs) error {
+	obj, err := s.specificationMgr.FetchByPrimaryKey(int(specs.SpecID))
+	if err != nil {
+		return err
+	}
+	if obj == nil {
+		return errors.New("规格不存在")
+	}
+
+	return nil
 }
 
 func (s *specsService) Delete(ctx *gin.Context, req []int64) error {
+	s.specificationMgr.GetByOptions()
 	return nil
 }
 

@@ -209,8 +209,26 @@ func (obj *SpecificationMgr) GetBatchFromSellerID(sellerIDs []int) (results []*m
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *SpecificationMgr) FetchByPrimaryKey(specID int) (result models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_id` = ?", specID).First(&result).Error
+func (obj *SpecificationMgr) FetchByPrimaryKey(specID int) (result *models.EsSpecification, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_id` = ?", specID).First(result).Error
 
 	return
+}
+
+func (obj *SpecificationMgr) Create(specs *models.EsSpecification) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(specs).Error
+
+	return
+}
+
+func (obj *SpecificationMgr) Update(specID int, updates map[string]interface{}) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSpecification{}).
+		Where("`spec_id` = ?", specID).Updates(updates).Error
+
+	return
+}
+
+func (obj *SpecificationMgr) Raw(sql string, values ...interface{}) (err error) {
+	//tx := obj.rdb.WithContext(obj.ctx).Raw(sql, values)
+	return nil
 }
