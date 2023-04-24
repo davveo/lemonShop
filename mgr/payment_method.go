@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -19,7 +20,12 @@ func NewPaymentMethodMgr(db db.Repo) *PaymentMethodMgr {
 		panic(fmt.Errorf("NewPaymentMethodMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &PaymentMethodMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_payment_method"), wdb: db.GetDbW().Table("es_payment_method"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &PaymentMethodMgr{
+		_BaseMgr: &_BaseMgr{
+			rdb:       db.GetDbR().Table("es_payment_method"),
+			wdb:       db.GetDbW().Table("es_payment_method"),
+			isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1},
+	}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -19,7 +20,11 @@ func NewPintuanMgr(db db.Repo) *PintuanMgr {
 		panic(fmt.Errorf("NewPintuanMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &PintuanMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_pintuan"), wdb: db.GetDbW().Table("es_pintuan"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &PintuanMgr{_BaseMgr: &_BaseMgr{
+		rdb:       db.GetDbR().Table("es_pintuan"),
+		wdb:       db.GetDbW().Table("es_pintuan"),
+		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1},
+	}
 }
 
 // GetTableName get sql table name.获取数据库名字
