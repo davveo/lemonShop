@@ -20,55 +20,6 @@ func (m *EsFullDiscountGift) TableName() string {
 	return "es_full_discount_gift"
 }
 
-// EsGoods 商品(es_goods)
-type EsGoods struct {
-	GoodsID             int     `gorm:"primaryKey;column:goods_id" json:"-"`                       // 主键
-	GoodsName           string  `gorm:"column:goods_name" json:"goods_name"`                       // 商品名称
-	Sn                  string  `gorm:"column:sn" json:"sn"`                                       // 商品编号
-	BrandID             int     `gorm:"column:brand_id" json:"brand_id"`                           // 品牌id
-	CategoryID          int     `gorm:"column:category_id" json:"category_id"`                     // 分类id
-	GoodsType           string  `gorm:"column:goods_type" json:"goods_type"`                       // 商品类型normal普通point积分
-	Weight              float64 `gorm:"column:weight" json:"weight"`                               // 重量
-	MarketEnable        int     `gorm:"column:market_enable" json:"market_enable"`                 // 上架状态 1上架  0下架
-	Intro               string  `gorm:"column:intro" json:"intro"`                                 // 详情
-	Price               float64 `gorm:"column:price" json:"price"`                                 // 商品价格
-	Cost                float64 `gorm:"column:cost" json:"cost"`                                   // 成本价格
-	Mktprice            float64 `gorm:"column:mktprice" json:"mktprice"`                           // 市场价格
-	HaveSpec            int     `gorm:"column:have_spec" json:"have_spec"`                         // 是否有规格0没有 1有
-	CreateTime          int64   `gorm:"column:create_time" json:"create_time"`                     // 创建时间
-	LastModify          int64   `gorm:"column:last_modify" json:"last_modify"`                     // 最后修改时间
-	ViewCount           int     `gorm:"column:view_count" json:"view_count"`                       // 浏览数量
-	BuyCount            int     `gorm:"column:buy_count" json:"buy_count"`                         // 购买数量
-	Disabled            int     `gorm:"column:disabled" json:"disabled"`                           // 是否被删除0 删除 1未删除
-	Quantity            int     `gorm:"column:quantity" json:"quantity"`                           // 库存
-	EnableQuantity      int     `gorm:"column:enable_quantity" json:"enable_quantity"`             // 可用库存
-	Point               int     `gorm:"column:point" json:"point"`                                 // 如果是积分商品需要使用的积分
-	PageTitle           string  `gorm:"column:page_title" json:"page_title"`                       // seo标题
-	MetaKeywords        string  `gorm:"column:meta_keywords" json:"meta_keywords"`                 // seo关键字
-	MetaDescription     string  `gorm:"column:meta_description" json:"meta_description"`           // seo描述
-	Grade               float64 `gorm:"column:grade" json:"grade"`                                 // 商品好评率
-	Thumbnail           string  `gorm:"column:thumbnail" json:"thumbnail"`                         // 缩略图路径
-	Big                 string  `gorm:"column:big" json:"big"`                                     // 大图路径
-	Small               string  `gorm:"column:small" json:"small"`                                 // 小图路径
-	Original            string  `gorm:"column:original" json:"original"`                           // 原图路径
-	SellerID            int     `gorm:"column:seller_id" json:"seller_id"`                         // 卖家id
-	ShopCatID           int     `gorm:"column:shop_cat_id" json:"shop_cat_id"`                     // 店铺分类id
-	CommentNum          int     `gorm:"column:comment_num" json:"comment_num"`                     // 评论数量
-	TemplateID          int     `gorm:"column:template_id" json:"template_id"`                     // 运费模板id
-	GoodsTransfeeCharge int     `gorm:"column:goods_transfee_charge" json:"goods_transfee_charge"` // 谁承担运费0：买家承担，1：卖家承担
-	SellerName          string  `gorm:"column:seller_name" json:"seller_name"`                     // 卖家名字
-	IsAuth              int     `gorm:"column:is_auth" json:"is_auth"`                             // 0 需要审核 并且待审核，1 不需要审核 2需要审核 且审核通过 3 需要审核 且审核未通过
-	AuthMessage         string  `gorm:"column:auth_message" json:"auth_message"`                   // 审核信息
-	SelfOperated        int     `gorm:"column:self_operated" json:"self_operated"`                 // 是否是自营商品 0 不是 1是
-	UnderMessage        string  `gorm:"column:under_message" json:"under_message"`                 // 下架原因
-	Priority            int     `gorm:"column:priority" json:"priority"`                           // 优先级:高(3)、中(2)、低(1)
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsGoods) TableName() string {
-	return "es_goods"
-}
-
 // EsGoodsGallery 商品相册(es_goods_gallery)
 type EsGoodsGallery struct {
 	ImgID     int    `gorm:"primaryKey;column:img_id" json:"-"` // 主键
@@ -123,36 +74,6 @@ type EsGoodsSku struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsGoodsSku) TableName() string {
 	return "es_goods_sku"
-}
-
-// EsGoodsSnapshot 交易快照(es_goods_snapshot)
-type EsGoodsSnapshot struct {
-	SnapshotID    int     `gorm:"primaryKey;column:snapshot_id" json:"-"`      // 主键
-	GoodsID       int     `gorm:"column:goods_id" json:"goods_id"`             // 商品id
-	Name          string  `gorm:"column:name" json:"name"`                     // 商品名称
-	Sn            string  `gorm:"column:sn" json:"sn"`                         // 商品编号
-	BrandName     string  `gorm:"column:brand_name" json:"brand_name"`         // 品牌名称
-	CategoryName  string  `gorm:"column:category_name" json:"category_name"`   // 分类名称
-	GoodsType     string  `gorm:"column:goods_type" json:"goods_type"`         // 商品类型
-	Weight        float64 `gorm:"column:weight" json:"weight"`                 // 重量
-	Intro         string  `gorm:"column:intro" json:"intro"`                   // 商品详情
-	Price         float64 `gorm:"column:price" json:"price"`                   // 商品价格
-	Cost          float64 `gorm:"column:cost" json:"cost"`                     // 商品成本价
-	Mktprice      float64 `gorm:"column:mktprice" json:"mktprice"`             // 商品市场价
-	HaveSpec      int16   `gorm:"column:have_spec" json:"have_spec"`           // 商品是否开启规格1 开启 0 未开启
-	ParamsJSON    string  `gorm:"column:params_json" json:"params_json"`       // 参数json
-	ImgJSON       string  `gorm:"column:img_json" json:"img_json"`             // 图片json
-	CreateTime    int64   `gorm:"column:create_time" json:"create_time"`       // 快照时间
-	Point         int     `gorm:"column:point" json:"point"`                   // 商品使用积分
-	SellerID      int     `gorm:"column:seller_id" json:"seller_id"`           // 所属卖家
-	PromotionJSON string  `gorm:"column:promotion_json" json:"promotion_json"` // 促销json值
-	CouponJSON    string  `gorm:"column:coupon_json" json:"coupon_json"`       // 优惠券json值
-	MemberID      int     `gorm:"column:member_id" json:"member_id"`           // 会员id
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsGoodsSnapshot) TableName() string {
-	return "es_goods_snapshot"
 }
 
 // EsGoodsWords 商品分词表(es_goods_words)
@@ -218,39 +139,6 @@ type EsGroupbuyCat struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsGroupbuyCat) TableName() string {
 	return "es_groupbuy_cat"
-}
-
-// EsGroupbuyGoods 团购商品(es_groupbuy_goods)
-type EsGroupbuyGoods struct {
-	GbID          int     `gorm:"primaryKey;column:gb_id" json:"-"`            // 团购商品Id
-	SkuID         int     `gorm:"column:sku_id" json:"sku_id"`                 // 货品Id
-	ActID         int     `gorm:"column:act_id" json:"act_id"`                 // 活动Id
-	CatID         int     `gorm:"column:cat_id" json:"cat_id"`                 // cat_id
-	AreaID        int     `gorm:"column:area_id" json:"area_id"`               // 地区Id
-	GbName        string  `gorm:"column:gb_name" json:"gb_name"`               // 团购名称
-	GbTitle       string  `gorm:"column:gb_title" json:"gb_title"`             // 副标题
-	GoodsName     string  `gorm:"column:goods_name" json:"goods_name"`         // 商品名称
-	GoodsID       int     `gorm:"column:goods_id" json:"goods_id"`             // 商品Id
-	OriginalPrice float64 `gorm:"column:original_price" json:"original_price"` // 原始价格
-	Price         float64 `gorm:"column:price" json:"price"`                   // 团购价格
-	ImgURL        string  `gorm:"column:img_url" json:"img_url"`               // 图片地址
-	GoodsNum      int     `gorm:"column:goods_num" json:"goods_num"`           // 商品总数
-	VisualNum     int     `gorm:"column:visual_num" json:"visual_num"`         // 虚拟数量
-	LimitNum      int     `gorm:"column:limit_num" json:"limit_num"`           // 限购数量
-	BuyNum        int     `gorm:"column:buy_num" json:"buy_num"`               // 已团购数量
-	ViewNum       int     `gorm:"column:view_num" json:"view_num"`             // 浏览数量
-	Remark        string  `gorm:"column:remark" json:"remark"`                 // 介绍
-	GbStatus      int     `gorm:"column:gb_status" json:"gb_status"`           // 状态
-	AddTime       int64   `gorm:"column:add_time" json:"add_time"`             // 添加时间
-	WapThumbnail  string  `gorm:"column:wap_thumbnail" json:"wap_thumbnail"`   // wap缩略图
-	Thumbnail     string  `gorm:"column:thumbnail" json:"thumbnail"`           // pc缩略图
-	SellerID      int     `gorm:"column:seller_id" json:"seller_id"`           // 商家ID
-	SellerName    string  `gorm:"column:seller_name" json:"seller_name"`       // 店铺名称
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsGroupbuyGoods) TableName() string {
-	return "es_groupbuy_goods"
 }
 
 // EsGroupbuyQuantityLog 团购商品库存日志表(es_groupbuy_quantity_log)
@@ -362,50 +250,6 @@ type EsLogisticsCompany struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsLogisticsCompany) TableName() string {
 	return "es_logistics_company"
-}
-
-// EsMember 会员表(es_member)
-type EsMember struct {
-	MemberID            int    `gorm:"primaryKey;column:member_id" json:"-"`                      // 会员ID
-	Uname               string `gorm:"column:uname" json:"uname"`                                 // 会员登陆用户名
-	Email               string `gorm:"column:email" json:"email"`                                 // 邮箱
-	Password            string `gorm:"column:password" json:"password"`                           // 会员登陆密码
-	CreateTime          int64  `gorm:"column:create_time" json:"create_time"`                     // 会员注册时间
-	Sex                 int    `gorm:"column:sex" json:"sex"`                                     // 会员性别 1：男，0：女
-	Birthday            int64  `gorm:"column:birthday" json:"birthday"`                           // 会员生日
-	ProvinceID          int    `gorm:"column:province_id" json:"province_id"`                     // 所属省份ID
-	CityID              int    `gorm:"column:city_id" json:"city_id"`                             // 所属城市ID
-	CountyID            int    `gorm:"column:county_id" json:"county_id"`                         // 所属县(区)ID
-	TownID              int    `gorm:"column:town_id" json:"town_id"`                             // 所属城镇ID
-	Province            string `gorm:"column:province" json:"province"`                           // 所属省份名称
-	City                string `gorm:"column:city" json:"city"`                                   // 所属城市名称
-	County              string `gorm:"column:county" json:"county"`                               // 所属县(区)名称
-	Town                string `gorm:"column:town" json:"town"`                                   // 所属城镇名称
-	Address             string `gorm:"column:address" json:"address"`                             // 详细地址
-	Mobile              string `gorm:"column:mobile" json:"mobile"`                               // 手机号码
-	Tel                 string `gorm:"column:tel" json:"tel"`                                     // 座机号码
-	GradePoint          int64  `gorm:"column:grade_point" json:"grade_point"`                     // 等级积分
-	Msn                 string `gorm:"column:msn" json:"msn"`                                     // 会员MSN
-	Remark              string `gorm:"column:remark" json:"remark"`                               // 会员备注
-	LastLogin           int64  `gorm:"column:last_login" json:"last_login"`                       // 上次登陆时间
-	LoginCount          int    `gorm:"column:login_count" json:"login_count"`                     // 登陆次数
-	IsCheked            int    `gorm:"column:is_cheked" json:"is_cheked"`                         // 邮件是否已验证
-	RegisterIP          string `gorm:"column:register_ip" json:"register_ip"`                     // 注册IP地址
-	RecommendPointState int    `gorm:"column:recommend_point_state" json:"recommend_point_state"` // 是否已经完成了推荐积分
-	InfoFull            int    `gorm:"column:info_full" json:"info_full"`                         // 会员信息是否完善
-	FindCode            string `gorm:"column:find_code" json:"find_code"`                         // find_code
-	Face                string `gorm:"column:face" json:"face"`                                   // 会员头像
-	Midentity           int    `gorm:"column:midentity" json:"midentity"`                         // 身份证号
-	Disabled            int    `gorm:"column:disabled" json:"disabled"`                           // 会员状态
-	ShopID              int    `gorm:"column:shop_id" json:"shop_id"`                             // 店铺ID
-	HaveShop            int    `gorm:"column:have_shop" json:"have_shop"`                         // 是否开通店铺
-	ConsumPoint         int64  `gorm:"column:consum_point" json:"consum_point"`                   // 消费积分
-	Nickname            string `gorm:"column:nickname" json:"nickname"`                           // 昵称
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsMember) TableName() string {
-	return "es_member"
 }
 
 // EsMemberAddress 会员收货地址表(es_member_address)
@@ -735,115 +579,6 @@ func (m *EsNavigation) TableName() string {
 	return "es_navigation"
 }
 
-// EsOrder 订单表(es_order)
-type EsOrder struct {
-	OrderID           int     `gorm:"primaryKey;column:order_id" json:"-"`                   // 主键ID
-	TradeSn           string  `gorm:"column:trade_sn" json:"trade_sn"`                       // 交易编号
-	SellerID          int     `gorm:"column:seller_id" json:"seller_id"`                     // 店铺ID
-	SellerName        string  `gorm:"column:seller_name" json:"seller_name"`                 // 店铺名称
-	MemberID          int     `gorm:"column:member_id" json:"member_id"`                     // 会员ID
-	MemberName        string  `gorm:"column:member_name" json:"member_name"`                 // 买家账号
-	OrderStatus       string  `gorm:"column:order_status" json:"order_status"`               // 订单状态
-	PayStatus         string  `gorm:"column:pay_status" json:"pay_status"`                   // 付款状态
-	ShipStatus        string  `gorm:"column:ship_status" json:"ship_status"`                 // 货运状态
-	ShippingID        int     `gorm:"column:shipping_id" json:"shipping_id"`                 // 配送方式ID
-	CommentStatus     string  `gorm:"column:comment_status" json:"comment_status"`           // 评论是否完成
-	ShippingType      string  `gorm:"column:shipping_type" json:"shipping_type"`             // 配送方式
-	PaymentMethodID   string  `gorm:"column:payment_method_id" json:"payment_method_id"`     // 支付方式id
-	PaymentPluginID   string  `gorm:"column:payment_plugin_id" json:"payment_plugin_id"`     // 支付插件id
-	PaymentMethodName string  `gorm:"column:payment_method_name" json:"payment_method_name"` // 支付方式名称
-	PaymentType       string  `gorm:"column:payment_type" json:"payment_type"`               // 支付方式类型
-	PaymentTime       int64   `gorm:"column:payment_time" json:"payment_time"`               // 支付时间
-	PayMoney          float64 `gorm:"column:pay_money" json:"pay_money"`                     // 已支付金额
-	ShipName          string  `gorm:"column:ship_name" json:"ship_name"`                     // 收货人姓名
-	ShipAddr          string  `gorm:"column:ship_addr" json:"ship_addr"`                     // 收货地址
-	ShipZip           string  `gorm:"column:ship_zip" json:"ship_zip"`                       // 收货人邮编
-	ShipMobile        string  `gorm:"column:ship_mobile" json:"ship_mobile"`                 // 收货人手机
-	ShipTel           string  `gorm:"column:ship_tel" json:"ship_tel"`                       // 收货人电话
-	ReceiveTime       string  `gorm:"column:receive_time" json:"receive_time"`               // 收货时间
-	ShipProvinceID    int     `gorm:"column:ship_province_id" json:"ship_province_id"`       // 配送地区-省份ID
-	ShipCityID        int     `gorm:"column:ship_city_id" json:"ship_city_id"`               // 配送地区-城市ID
-	ShipCountyID      int     `gorm:"column:ship_county_id" json:"ship_county_id"`           // 配送地区-区(县)ID
-	ShipTownID        int     `gorm:"column:ship_town_id" json:"ship_town_id"`               // 配送街道id
-	ShipProvince      string  `gorm:"column:ship_province" json:"ship_province"`             // 配送地区-省份
-	ShipCity          string  `gorm:"column:ship_city" json:"ship_city"`                     // 配送地区-城市
-	ShipCounty        string  `gorm:"column:ship_county" json:"ship_county"`                 // 配送地区-区(县)
-	ShipTown          string  `gorm:"column:ship_town" json:"ship_town"`                     // 配送街道
-	OrderPrice        float64 `gorm:"column:order_price" json:"order_price"`                 // 订单总额
-	GoodsPrice        float64 `gorm:"column:goods_price" json:"goods_price"`                 // 商品总额
-	ShippingPrice     float64 `gorm:"column:shipping_price" json:"shipping_price"`           // 配送费用
-	DiscountPrice     float64 `gorm:"column:discount_price" json:"discount_price"`           // 优惠金额
-	Disabled          int     `gorm:"column:disabled" json:"disabled"`                       // 是否被删除
-	Weight            float64 `gorm:"column:weight" json:"weight"`                           // 订单商品总重量
-	GoodsNum          int     `gorm:"column:goods_num" json:"goods_num"`                     // 商品数量
-	Remark            string  `gorm:"column:remark" json:"remark"`                           // 订单备注
-	CancelReason      string  `gorm:"column:cancel_reason" json:"cancel_reason"`             // 订单取消原因
-	TheSign           string  `gorm:"column:the_sign" json:"the_sign"`                       // 签收人
-	ItemsJSON         string  `gorm:"column:items_json" json:"items_json"`                   // 货物列表json
-	WarehouseID       int     `gorm:"column:warehouse_id" json:"warehouse_id"`               // 发货仓库ID
-	NeedPayMoney      float64 `gorm:"column:need_pay_money" json:"need_pay_money"`           // 应付金额
-	ShipNo            string  `gorm:"column:ship_no" json:"ship_no"`                         // 发货单号
-	AddressID         int     `gorm:"column:address_id" json:"address_id"`                   // 收货地址ID
-	AdminRemark       int     `gorm:"column:admin_remark" json:"admin_remark"`               // 管理员备注
-	LogiID            int     `gorm:"column:logi_id" json:"logi_id"`                         // 物流公司ID
-	LogiName          string  `gorm:"column:logi_name" json:"logi_name"`                     // 物流公司名称
-	CompleteTime      int64   `gorm:"column:complete_time" json:"complete_time"`             // 完成时间
-	CreateTime        int64   `gorm:"column:create_time" json:"create_time"`                 // 订单创建时间
-	SigningTime       int64   `gorm:"column:signing_time" json:"signing_time"`               // 签收时间
-	ShipTime          int64   `gorm:"column:ship_time" json:"ship_time"`                     // 送货时间
-	PayOrderNo        string  `gorm:"column:pay_order_no" json:"pay_order_no"`               // 支付方式返回的交易号
-	ServiceStatus     string  `gorm:"column:service_status" json:"service_status"`           // 售后状态
-	BillStatus        int     `gorm:"column:bill_status" json:"bill_status"`                 // 结算状态
-	BillSn            string  `gorm:"column:bill_sn" json:"bill_sn"`                         // 结算单号
-	ClientType        string  `gorm:"column:client_type" json:"client_type"`                 // 订单来源
-	Sn                string  `gorm:"column:sn" json:"sn"`                                   // 订单编号
-	NeedReceipt       int     `gorm:"column:need_receipt" json:"need_receipt"`               // 是否需要发票
-	OrderType         string  `gorm:"column:order_type" json:"order_type"`                   // 订单类型
-	OrderData         string  `gorm:"column:order_data" json:"order_data"`                   // 订单数据
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsOrder) TableName() string {
-	return "es_order"
-}
-
-// EsOrderComplain [...]
-type EsOrderComplain struct {
-	ComplainID        int     `gorm:"primaryKey;column:complain_id" json:"-"`              // 主键
-	ComplainTopic     string  `gorm:"column:complain_topic" json:"complain_topic"`         // 投诉主题
-	Content           string  `gorm:"column:content" json:"content"`                       // 投诉内容
-	CreateTime        int64   `gorm:"column:create_time" json:"create_time"`               // 投诉时间
-	Images            string  `gorm:"column:images" json:"images"`                         // 投诉凭证图片
-	Status            string  `gorm:"column:status" json:"status"`                         // 状态，见ComplainStatusEnum.java
-	AppealContent     string  `gorm:"column:appeal_content" json:"appeal_content"`         // 商家申诉内容
-	AppealTime        int64   `gorm:"column:appeal_time" json:"appeal_time"`               // 商家申诉时间
-	AppealImages      string  `gorm:"column:appeal_images" json:"appeal_images"`           // 商家申诉上传的图片
-	OrderSn           string  `gorm:"column:order_sn" json:"order_sn"`                     // 订单号
-	OrderTime         int64   `gorm:"column:order_time" json:"order_time"`                 // 下单时间
-	GoodsName         string  `gorm:"column:goods_name" json:"goods_name"`                 // 商品名称
-	GoodsID           int     `gorm:"column:goods_id" json:"goods_id"`                     // 商品id
-	GoodsPrice        float64 `gorm:"column:goods_price" json:"goods_price"`               // 商品价格
-	Num               int     `gorm:"column:num" json:"num"`                               // 购买的商品数量
-	ShippingPrice     float64 `gorm:"column:shipping_price" json:"shipping_price"`         // 运费
-	OrderPrice        float64 `gorm:"column:order_price" json:"order_price"`               // 订单金额
-	ShipNo            string  `gorm:"column:ship_no" json:"ship_no"`                       // 物流单号
-	SellerID          int     `gorm:"column:seller_id" json:"seller_id"`                   // 商家id
-	SellerName        string  `gorm:"column:seller_name" json:"seller_name"`               // 商家名称
-	MemberID          int     `gorm:"column:member_id" json:"member_id"`                   // 会员id
-	MemberName        string  `gorm:"column:member_name" json:"member_name"`               // 会员名称
-	ShipName          string  `gorm:"column:ship_name" json:"ship_name"`                   // 收货人
-	ShipAddr          string  `gorm:"column:ship_addr" json:"ship_addr"`                   // 收货地址
-	ShipMobile        string  `gorm:"column:ship_mobile" json:"ship_mobile"`               // 收货人手机
-	ArbitrationResult string  `gorm:"column:arbitration_result" json:"arbitration_result"` // 仲裁结果
-	SkuID             int     `gorm:"column:sku_id" json:"sku_id"`                         // sku 主键
-	GoodsImage        string  `gorm:"column:goods_image" json:"goods_image"`               // 商品图片
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsOrderComplain) TableName() string {
-	return "es_order_complain"
-}
-
 // EsOrderComplainCommunication [...]
 type EsOrderComplainCommunication struct {
 	CommunicationID int    `gorm:"primaryKey;column:communication_id" json:"-"` // 主键
@@ -858,33 +593,6 @@ type EsOrderComplainCommunication struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsOrderComplainCommunication) TableName() string {
 	return "es_order_complain_communication"
-}
-
-// EsOrderItems 订单货物表(es_order_items)
-type EsOrderItems struct {
-	ItemID        int     `gorm:"primaryKey;column:item_id" json:"-"`          // 主键ID
-	GoodsID       int     `gorm:"column:goods_id" json:"goods_id"`             // 商品ID
-	ProductID     int     `gorm:"column:product_id" json:"product_id"`         // 货品ID
-	Num           int     `gorm:"column:num" json:"num"`                       // 销售量
-	ShipNum       int     `gorm:"column:ship_num" json:"ship_num"`             // 发货量
-	TradeSn       string  `gorm:"column:trade_sn" json:"trade_sn"`             // 交易编号
-	OrderSn       string  `gorm:"column:order_sn" json:"order_sn"`             // 订单编号
-	Image         string  `gorm:"column:image" json:"image"`                   // 图片
-	Name          string  `gorm:"column:name" json:"name"`                     // 商品名称
-	Price         float64 `gorm:"column:price" json:"price"`                   // 销售金额
-	CatID         int     `gorm:"column:cat_id" json:"cat_id"`                 // 分类ID
-	State         int     `gorm:"column:state" json:"state"`                   // 状态
-	SnapshotID    int     `gorm:"column:snapshot_id" json:"snapshot_id"`       // 快照id
-	SpecJSON      string  `gorm:"column:spec_json" json:"spec_json"`           // 规格json
-	PromotionType string  `gorm:"column:promotion_type" json:"promotion_type"` // 促销类型
-	PromotionID   int     `gorm:"column:promotion_id" json:"promotion_id"`     // 促销id
-	RefundPrice   float64 `gorm:"column:refund_price" json:"refund_price"`     // 订单项可退款金额
-	CommentStatus string  `gorm:"column:comment_status" json:"comment_status"` // 评论状态
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsOrderItems) TableName() string {
-	return "es_order_items"
 }
 
 // EsOrderLog 订单日志表(es_order_log)
@@ -1198,86 +906,6 @@ func (m *EsReceiptFile) TableName() string {
 	return "es_receipt_file"
 }
 
-// EsReceiptHistory 会员开票历史记录表(es_receipt_history)
-type EsReceiptHistory struct {
-	HistoryID      int     `gorm:"primaryKey;column:history_id" json:"-"`         // 主键ID
-	OrderSn        string  `gorm:"column:order_sn" json:"order_sn"`               // 订单编号
-	OrderPrice     float64 `gorm:"column:order_price" json:"order_price"`         // 订单金额
-	SellerID       int     `gorm:"column:seller_id" json:"seller_id"`             // 开票商家ID
-	SellerName     string  `gorm:"column:seller_name" json:"seller_name"`         // 开票商家
-	MemberID       int     `gorm:"column:member_id" json:"member_id"`             // 会员ID
-	Status         int16   `gorm:"column:status" json:"status"`                   // 开票状态 0：未开，1：已开
-	ReceiptMethod  string  `gorm:"column:receipt_method" json:"receipt_method"`   // 开票方式(针对增值税专用发票)
-	ReceiptType    string  `gorm:"column:receipt_type" json:"receipt_type"`       // 发票类型 ELECTRO：电子普通发票，VATORDINARY：增值税普通发票，VATOSPECIAL：增值税专用发票
-	LogiID         int     `gorm:"column:logi_id" json:"logi_id"`                 // 物流公司ID
-	LogiName       string  `gorm:"column:logi_name" json:"logi_name"`             // 物流公司名称
-	LogiCode       string  `gorm:"column:logi_code" json:"logi_code"`             // 快递单号
-	ReceiptTitle   string  `gorm:"column:receipt_title" json:"receipt_title"`     // 发票抬头
-	ReceiptContent string  `gorm:"column:receipt_content" json:"receipt_content"` // 发票内容
-	TaxNo          string  `gorm:"column:tax_no" json:"tax_no"`                   // 纳税人识别号
-	RegAddr        string  `gorm:"column:reg_addr" json:"reg_addr"`               // 注册地址
-	RegTel         string  `gorm:"column:reg_tel" json:"reg_tel"`                 // 注册电话
-	BankName       string  `gorm:"column:bank_name" json:"bank_name"`             // 开户银行
-	BankAccount    string  `gorm:"column:bank_account" json:"bank_account"`       // 银行账户
-	MemberName     string  `gorm:"column:member_name" json:"member_name"`         // 收票人名称
-	MemberMobile   string  `gorm:"column:member_mobile" json:"member_mobile"`     // 收票人手机号
-	MemberEmail    string  `gorm:"column:member_email" json:"member_email"`       // 收票人邮箱
-	ProvinceID     int     `gorm:"column:province_id" json:"province_id"`         // 收票地址-所属省份ID
-	CityID         int     `gorm:"column:city_id" json:"city_id"`                 // 收票地址-所属城市ID
-	CountyID       int     `gorm:"column:county_id" json:"county_id"`             // 收票地址-所属区县ID
-	TownID         int     `gorm:"column:town_id" json:"town_id"`                 // 收票地址-所属乡镇ID
-	Province       string  `gorm:"column:province" json:"province"`               // 收票地址-所属省份
-	City           string  `gorm:"column:city" json:"city"`                       // 收票地址-所属城市
-	County         string  `gorm:"column:county" json:"county"`                   // 收票地址-所属区县
-	Town           string  `gorm:"column:town" json:"town"`                       // 收票地址-所属乡镇
-	DetailAddr     string  `gorm:"column:detail_addr" json:"detail_addr"`         // 收票地址-详细地址
-	AddTime        int64   `gorm:"column:add_time" json:"add_time"`               // 申请开票日期
-	GoodsJSON      string  `gorm:"column:goods_json" json:"goods_json"`           // 订单商品信息
-	OrderStatus    string  `gorm:"column:order_status" json:"order_status"`       // 订单出库状态，NEW/CONFIRM
-	Uname          string  `gorm:"column:uname" json:"uname"`                     // 会员名称
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsReceiptHistory) TableName() string {
-	return "es_receipt_history"
-}
-
-// EsRefund 售后服务退款单(es_refund)
-type EsRefund struct {
-	ID                int     `gorm:"primaryKey;column:id" json:"-"`                         // 主键id
-	Sn                string  `gorm:"column:sn" json:"sn"`                                   // 售后服务单号
-	MemberID          int     `gorm:"column:member_id" json:"member_id"`                     // 会员id
-	MemberName        string  `gorm:"column:member_name" json:"member_name"`                 // 会员名称
-	SellerID          int     `gorm:"column:seller_id" json:"seller_id"`                     // 卖家id
-	SellerName        string  `gorm:"column:seller_name" json:"seller_name"`                 // 卖家姓名
-	OrderSn           string  `gorm:"column:order_sn" json:"order_sn"`                       // 订单编号
-	RefundStatus      string  `gorm:"column:refund_status" json:"refund_status"`             // 退款单状态 APPLY：新创建，REFUNDING：退款中，REFUNDFAIL：退款失败，COMPLETE：完成
-	CreateTime        int64   `gorm:"column:create_time" json:"create_time"`                 // 创建时间
-	RefundPrice       float64 `gorm:"column:refund_price" json:"refund_price"`               // 申请退款金额
-	RefundWay         string  `gorm:"column:refund_way" json:"refund_way"`                   // 退款方式 ORIGINAL：原路退回，OFFLINE：线下退款，ACCOUNT：账户退款
-	AccountType       string  `gorm:"column:account_type" json:"account_type"`               // 退款账户类型
-	ReturnAccount     string  `gorm:"column:return_account" json:"return_account"`           // 退款账户
-	BankName          string  `gorm:"column:bank_name" json:"bank_name"`                     // 银行名称
-	BankAccountNumber string  `gorm:"column:bank_account_number" json:"bank_account_number"` // 银行账号
-	BankAccountName   string  `gorm:"column:bank_account_name" json:"bank_account_name"`     // 银行开户名
-	BankDepositName   string  `gorm:"column:bank_deposit_name" json:"bank_deposit_name"`     // 银行开户行
-	PayOrderNo        string  `gorm:"column:pay_order_no" json:"pay_order_no"`               // 支付结果交易号
-	PaymentType       string  `gorm:"column:payment_type" json:"payment_type"`               // 订单付款类型 ONLINE：在线支付，COD：货到付款
-	RefundFailReason  string  `gorm:"column:refund_fail_reason" json:"refund_fail_reason"`   // 退款失败原因
-	RefundTime        int64   `gorm:"column:refund_time" json:"refund_time"`                 // 退款时间
-	Mobile            string  `gorm:"column:mobile" json:"mobile"`                           // 手机号
-	AgreePrice        float64 `gorm:"column:agree_price" json:"agree_price"`                 // 商家同意的退款金额
-	ActualPrice       float64 `gorm:"column:actual_price" json:"actual_price"`               // 实际退款金额
-	GoodsJSON         string  `gorm:"column:goods_json" json:"goods_json"`                   // 售后商品信息json
-	Disabled          string  `gorm:"column:disabled" json:"disabled"`                       // 删除状态 DELETED：已删除 NORMAL：正常
-	CreateChannel     string  `gorm:"column:create_channel" json:"create_channel"`           // 售后服务单创建渠道 NORMAL：正常渠道创建，PINTUAN：拼团失败自动创建
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsRefund) TableName() string {
-	return "es_refund"
-}
-
 // EsRegions 地区(es_regions)
 type EsRegions struct {
 	ID          int    `gorm:"primaryKey;column:id" json:"-"`           // 地区id
@@ -1460,97 +1088,6 @@ type EsShopCat struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsShopCat) TableName() string {
 	return "es_shop_cat"
-}
-
-// EsShopDetail 店铺详细(es_shop_detail)
-type EsShopDetail struct {
-	ID                      int     `gorm:"primaryKey;column:id" json:"-"`                                     // 店铺详细id
-	ShopID                  int     `gorm:"column:shop_id" json:"shop_id"`                                     // 店铺id
-	ShopProvinceID          int     `gorm:"column:shop_province_id" json:"shop_province_id"`                   // 店铺所在省id
-	ShopCityID              int     `gorm:"column:shop_city_id" json:"shop_city_id"`                           // 店铺所在市id
-	ShopCountyID            int     `gorm:"column:shop_county_id" json:"shop_county_id"`                       // 店铺所在县id
-	ShopTownID              int     `gorm:"column:shop_town_id" json:"shop_town_id"`                           // 店铺所在镇id
-	ShopProvince            string  `gorm:"column:shop_province" json:"shop_province"`                         // 店铺所在省
-	ShopCity                string  `gorm:"column:shop_city" json:"shop_city"`                                 // 店铺所在市
-	ShopCounty              string  `gorm:"column:shop_county" json:"shop_county"`                             // 店铺所在县
-	ShopTown                string  `gorm:"column:shop_town" json:"shop_town"`                                 // 店铺所在镇
-	ShopAdd                 string  `gorm:"column:shop_add" json:"shop_add"`                                   // 店铺详细地址
-	CompanyName             string  `gorm:"column:company_name" json:"company_name"`                           // 公司名称
-	CompanyAddress          string  `gorm:"column:company_address" json:"company_address"`                     // 公司地址
-	CompanyPhone            string  `gorm:"column:company_phone" json:"company_phone"`                         // 公司电话
-	CompanyEmail            string  `gorm:"column:company_email" json:"company_email"`                         // 电子邮箱
-	EmployeeNum             int     `gorm:"column:employee_num" json:"employee_num"`                           // 员工总数
-	RegMoney                float64 `gorm:"column:reg_money" json:"reg_money"`                                 // 注册资金
-	LinkName                string  `gorm:"column:link_name" json:"link_name"`                                 // 联系人姓名
-	LinkPhone               string  `gorm:"column:link_phone" json:"link_phone"`                               // 联系人电话
-	LegalName               string  `gorm:"column:legal_name" json:"legal_name"`                               // 法人姓名
-	LegalID                 string  `gorm:"column:legal_id" json:"legal_id"`                                   // 法人身份证
-	LegalImg                string  `gorm:"column:legal_img" json:"legal_img"`                                 // 法人身份证照片
-	LicenseNum              string  `gorm:"column:license_num" json:"license_num"`                             // 营业执照号
-	LicenseProvinceID       int     `gorm:"column:license_province_id" json:"license_province_id"`             // 营业执照所在省id
-	LicenseCityID           int     `gorm:"column:license_city_id" json:"license_city_id"`                     // 营业执照所在市id
-	LicenseCountyID         int     `gorm:"column:license_county_id" json:"license_county_id"`                 // 营业执照所在县id
-	LicenseTownID           int     `gorm:"column:license_town_id" json:"license_town_id"`                     // 营业执照所在镇id
-	LicenseProvince         string  `gorm:"column:license_province" json:"license_province"`                   // 营业执照所在省
-	LicenseCity             string  `gorm:"column:license_city" json:"license_city"`                           // 营业执照所在市
-	LicenseCounty           string  `gorm:"column:license_county" json:"license_county"`                       // 营业执照所在县
-	LicenseTown             string  `gorm:"column:license_town" json:"license_town"`                           // 营业执照所在镇
-	LicenseAdd              string  `gorm:"column:license_add" json:"license_add"`                             // 营业执照详细地址
-	EstablishDate           int64   `gorm:"column:establish_date" json:"establish_date"`                       // 成立日期
-	LicenceStart            int64   `gorm:"column:licence_start" json:"licence_start"`                         // 营业执照有效期开始
-	LicenceEnd              int64   `gorm:"column:licence_end" json:"licence_end"`                             // 营业执照有效期结束
-	Scope                   string  `gorm:"column:scope" json:"scope"`                                         // 法定经营范围
-	LicenceImg              string  `gorm:"column:licence_img" json:"licence_img"`                             // 营业执照电子版
-	OrganizationCode        string  `gorm:"column:organization_code" json:"organization_code"`                 // 组织机构代码
-	CodeImg                 string  `gorm:"column:code_img" json:"code_img"`                                   // 组织机构电子版
-	TaxesImg                string  `gorm:"column:taxes_img" json:"taxes_img"`                                 // 一般纳税人证明电子版
-	BankAccountName         string  `gorm:"column:bank_account_name" json:"bank_account_name"`                 // 银行开户名
-	BankNumber              string  `gorm:"column:bank_number" json:"bank_number"`                             // 银行开户账号
-	BankName                string  `gorm:"column:bank_name" json:"bank_name"`                                 // 开户银行支行名称
-	BankProvinceID          int     `gorm:"column:bank_province_id" json:"bank_province_id"`                   // 开户银行所在省id
-	BankCityID              int     `gorm:"column:bank_city_id" json:"bank_city_id"`                           // 开户银行所在市id
-	BankCountyID            int     `gorm:"column:bank_county_id" json:"bank_county_id"`                       // 开户银行所在县id
-	BankTownID              int     `gorm:"column:bank_town_id" json:"bank_town_id"`                           // 开户银行所在镇id
-	BankProvince            string  `gorm:"column:bank_province" json:"bank_province"`                         // 开户银行所在省
-	BankCity                string  `gorm:"column:bank_city" json:"bank_city"`                                 // 开户银行所在市
-	BankCounty              string  `gorm:"column:bank_county" json:"bank_county"`                             // 开户银行所在县
-	BankTown                string  `gorm:"column:bank_town" json:"bank_town"`                                 // 开户银行所在镇
-	BankImg                 string  `gorm:"column:bank_img" json:"bank_img"`                                   // 开户银行许可证电子版
-	TaxesCertificateNum     string  `gorm:"column:taxes_certificate_num" json:"taxes_certificate_num"`         // 税务登记证号
-	TaxesDistinguishNum     string  `gorm:"column:taxes_distinguish_num" json:"taxes_distinguish_num"`         // 纳税人识别号
-	TaxesCertificateImg     string  `gorm:"column:taxes_certificate_img" json:"taxes_certificate_img"`         // 税务登记证书
-	GoodsManagementCategory string  `gorm:"column:goods_management_category" json:"goods_management_category"` // 店铺经营类目
-	ShopLevel               int     `gorm:"column:shop_level" json:"shop_level"`                               // 店铺等级
-	ShopLevelApply          int     `gorm:"column:shop_level_apply" json:"shop_level_apply"`                   // 店铺等级申请
-	StoreSpaceCapacity      float64 `gorm:"column:store_space_capacity" json:"store_space_capacity"`           // 店铺相册已用存储量
-	ShopLogo                string  `gorm:"column:shop_logo" json:"shop_logo"`                                 // 店铺logo
-	ShopBanner              string  `gorm:"column:shop_banner" json:"shop_banner"`                             // 店铺横幅
-	ShopDesc                string  `gorm:"column:shop_desc" json:"shop_desc"`                                 // 店铺简介
-	ShopRecommend           int     `gorm:"column:shop_recommend" json:"shop_recommend"`                       // 是否推荐
-	ShopThemeid             int     `gorm:"column:shop_themeid" json:"shop_themeid"`                           // 店铺主题id
-	ShopThemePath           string  `gorm:"column:shop_theme_path" json:"shop_theme_path"`                     // 店铺主题模版路径
-	WapThemeid              int     `gorm:"column:wap_themeid" json:"wap_themeid"`                             // 店铺主题id
-	WapThemePath            string  `gorm:"column:wap_theme_path" json:"wap_theme_path"`                       // wap店铺主题
-	ShopCredit              float64 `gorm:"column:shop_credit" json:"shop_credit"`                             // 店铺信用
-	ShopPraiseRate          float64 `gorm:"column:shop_praise_rate" json:"shop_praise_rate"`                   // 店铺好评率
-	ShopDescriptionCredit   float64 `gorm:"column:shop_description_credit" json:"shop_description_credit"`     // 店铺描述相符度
-	ShopServiceCredit       float64 `gorm:"column:shop_service_credit" json:"shop_service_credit"`             // 服务态度分数
-	ShopDeliveryCredit      float64 `gorm:"column:shop_delivery_credit" json:"shop_delivery_credit"`           // 发货速度分数
-	ShopCollect             int     `gorm:"column:shop_collect" json:"shop_collect"`                           // 店铺收藏数
-	GoodsNum                int     `gorm:"column:goods_num" json:"goods_num"`                                 // 店铺商品数
-	ShopQq                  string  `gorm:"column:shop_qq" json:"shop_qq"`                                     // 店铺客服qq
-	ShopCommission          float64 `gorm:"column:shop_commission" json:"shop_commission"`                     // 店铺佣金比例
-	GoodsWarningCount       int     `gorm:"column:goods_warning_count" json:"goods_warning_count"`             // 货品预警数
-	SelfOperated            int     `gorm:"column:self_operated" json:"self_operated"`                         // 是否自营 1:是 0:否
-	Step                    int     `gorm:"column:step" json:"step"`                                           // 申请开店进度：1,2.3.4
-	OrdinReceiptStatus      int     `gorm:"column:ordin_receipt_status" json:"ordin_receipt_status"`           // 是否允许开具增值税普通发票 0：否，1：是
-	ElecReceiptStatus       int     `gorm:"column:elec_receipt_status" json:"elec_receipt_status"`             // 是否允许开具电子普通发票 0：否，1：是
-	TaxReceiptStatus        int     `gorm:"column:tax_receipt_status" json:"tax_receipt_status"`               // 是否允许开具增值税专用发票 0：否，1：是
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsShopDetail) TableName() string {
-	return "es_shop_detail"
 }
 
 // EsShopLogiRel 店铺物流公司对照表(es_shop_logi_rel)
@@ -2240,45 +1777,6 @@ type EsTags struct {
 // TableName get sql table name.获取数据库表名
 func (m *EsTags) TableName() string {
 	return "es_tags"
-}
-
-// EsTrade 交易表(es_trade)
-type EsTrade struct {
-	TradeID             int64   `gorm:"primaryKey;column:trade_id" json:"-"`                       // trade_id
-	TradeSn             string  `gorm:"column:trade_sn" json:"trade_sn"`                           // 交易编号
-	MemberID            int     `gorm:"column:member_id" json:"member_id"`                         // 买家id
-	MemberName          string  `gorm:"column:member_name" json:"member_name"`                     // 买家用户名
-	PaymentMethodID     string  `gorm:"column:payment_method_id" json:"payment_method_id"`         // 支付方式id
-	PaymentPluginID     string  `gorm:"column:payment_plugin_id" json:"payment_plugin_id"`         // 支付插件id
-	PaymentMethodName   string  `gorm:"column:payment_method_name" json:"payment_method_name"`     // 支付方式名称
-	PaymentType         string  `gorm:"column:payment_type" json:"payment_type"`                   // 支付方式类型
-	TotalPrice          float64 `gorm:"column:total_price" json:"total_price"`                     // 总价格
-	GoodsPrice          float64 `gorm:"column:goods_price" json:"goods_price"`                     // 商品价格
-	FreightPrice        float64 `gorm:"column:freight_price" json:"freight_price"`                 // 运费
-	DiscountPrice       float64 `gorm:"column:discount_price" json:"discount_price"`               // 优惠的金额
-	ConsigneeID         int     `gorm:"column:consignee_id" json:"consignee_id"`                   // 收货人id
-	ConsigneeName       string  `gorm:"column:consignee_name" json:"consignee_name"`               // 收货人姓名
-	ConsigneeCountry    string  `gorm:"column:consignee_country" json:"consignee_country"`         // 收货国家
-	ConsigneeCountryID  int     `gorm:"column:consignee_country_id" json:"consignee_country_id"`   // 收货国家id
-	ConsigneeProvince   string  `gorm:"column:consignee_province" json:"consignee_province"`       // 收货省
-	ConsigneeProvinceID int     `gorm:"column:consignee_province_id" json:"consignee_province_id"` // 收货省id
-	ConsigneeCity       string  `gorm:"column:consignee_city" json:"consignee_city"`               // 收货市
-	ConsigneeCityID     int     `gorm:"column:consignee_city_id" json:"consignee_city_id"`         // 收货市id
-	ConsigneeCounty     string  `gorm:"column:consignee_county" json:"consignee_county"`           // 收货区
-	ConsigneeCountyID   int     `gorm:"column:consignee_county_id" json:"consignee_county_id"`     // 收货区id
-	ConsigneeTown       string  `gorm:"column:consignee_town" json:"consignee_town"`               // 收货镇
-	ConsigneeTownID     int     `gorm:"column:consignee_town_id" json:"consignee_town_id"`         // 收货镇id
-	ConsigneeAddress    string  `gorm:"column:consignee_address" json:"consignee_address"`         // 收货详细地址
-	ConsigneeMobile     string  `gorm:"column:consignee_mobile" json:"consignee_mobile"`           // 收货人手机号
-	ConsigneeTelephone  string  `gorm:"column:consignee_telephone" json:"consignee_telephone"`     // 收货人电话
-	CreateTime          int64   `gorm:"column:create_time" json:"create_time"`                     // 交易创建时间
-	OrderJSON           string  `gorm:"column:order_json" json:"order_json"`                       // 订单json(预留，7.0可能废弃)
-	TradeStatus         string  `gorm:"column:trade_status" json:"trade_status"`                   // 订单状态
-}
-
-// TableName get sql table name.获取数据库表名
-func (m *EsTrade) TableName() string {
-	return "es_trade"
 }
 
 // EsTransactionRecord 交易记录表(es_transaction_record)
