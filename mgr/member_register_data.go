@@ -19,7 +19,7 @@ func NewSssMemberRegisterDataMgr(db db.Repo) *SssMemberRegisterDataMgr {
 		panic(fmt.Errorf("NewSssMemberRegisterDataMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &SssMemberRegisterDataMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_member_register_data"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &SssMemberRegisterDataMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_member_register_data"), wdb: db.GetDbW().Table("es_sss_member_register_data"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

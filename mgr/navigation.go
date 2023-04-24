@@ -19,7 +19,7 @@ func NewNavigationMgr(db db.Repo) *NavigationMgr {
 		panic(fmt.Errorf("NewNavigationMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &NavigationMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_navigation"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &NavigationMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_navigation"), wdb: db.GetDbW().Table("es_navigation"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

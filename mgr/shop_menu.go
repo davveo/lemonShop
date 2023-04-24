@@ -19,7 +19,7 @@ func NewShopMenuMgr(db db.Repo) *ShopMenuMgr {
 		panic(fmt.Errorf("NewShopMenuMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ShopMenuMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_shop_menu"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ShopMenuMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_shop_menu"), wdb: db.GetDbW().Table("es_shop_menu"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewReceiptAddressMgr(db db.Repo) *ReceiptAddressMgr {
 		panic(fmt.Errorf("NewReceiptAddressMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ReceiptAddressMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_address"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ReceiptAddressMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_address"), wdb: db.GetDbW().Table("es_receipt_address"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

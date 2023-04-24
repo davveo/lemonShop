@@ -19,7 +19,7 @@ func NewRegionsMgr(db db.Repo) *RegionsMgr {
 		panic(fmt.Errorf("NewRegionsMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &RegionsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_regions"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &RegionsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_regions"), wdb: db.GetDbW().Table("es_regions"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

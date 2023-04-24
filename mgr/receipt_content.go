@@ -19,7 +19,7 @@ func NewReceiptContentMgr(db db.Repo) *ReceiptContentMgr {
 		panic(fmt.Errorf("NewReceiptContentMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ReceiptContentMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_content"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ReceiptContentMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_content"), wdb: db.GetDbW().Table("es_receipt_content"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

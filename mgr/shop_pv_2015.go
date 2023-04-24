@@ -19,7 +19,7 @@ func NewSssShopPv2015Mgr(db db.Repo) *SssShopPv2015Mgr {
 		panic(fmt.Errorf("NewSssShopPv2015Mgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &SssShopPv2015Mgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_shop_pv_2015"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &SssShopPv2015Mgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_shop_pv_2015"), wdb: db.GetDbW().Table("es_sss_shop_pv_2015"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

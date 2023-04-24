@@ -19,7 +19,7 @@ func NewSssShopDataMgr(db db.Repo) *SssShopDataMgr {
 		panic(fmt.Errorf("NewSssShopDataMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &SssShopDataMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_shop_data"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &SssShopDataMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_shop_data"), wdb: db.GetDbW().Table("es_sss_shop_data"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewOrderComplainCommunicationMgr(db db.Repo) *OrderComplainCommunicationMgr
 		panic(fmt.Errorf("NewOrderComplainCommunicationMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &OrderComplainCommunicationMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_order_complain_communication"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &OrderComplainCommunicationMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_order_complain_communication"), wdb: db.GetDbW().Table("es_order_complain_communication"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewOrderOutStatusMgr(db db.Repo) *OrderOutStatusMgr {
 		panic(fmt.Errorf("NewOrderOutStatusMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &OrderOutStatusMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_order_out_status"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &OrderOutStatusMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_order_out_status"), wdb: db.GetDbW().Table("es_order_out_status"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

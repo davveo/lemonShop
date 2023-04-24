@@ -19,7 +19,7 @@ func NewReceiptHistoryMgr(db db.Repo) *ReceiptHistoryMgr {
 		panic(fmt.Errorf("NewReceiptHistoryMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ReceiptHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ReceiptHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_history"), wdb: db.GetDbW().Table("es_receipt_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewMemberCollectionGoodsMgr(db db.Repo) *MemberCollectionGoodsMgr {
 		panic(fmt.Errorf("NewMemberCollectionGoodsMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &MemberCollectionGoodsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_collection_goods"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &MemberCollectionGoodsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_collection_goods"), wdb: db.GetDbW().Table("es_member_collection_goods"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

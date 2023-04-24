@@ -19,7 +19,7 @@ func NewHistoryMgr(db db.Repo) *HistoryMgr {
 		panic(fmt.Errorf("NewHistoryMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &HistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &HistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_history"), wdb: db.GetDbW().Table("es_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

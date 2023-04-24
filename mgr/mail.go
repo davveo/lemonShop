@@ -19,7 +19,7 @@ func EsEmailMgr(db db.Repo) *mailMgr {
 		panic(fmt.Errorf("EsEmailMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &mailMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_email"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &mailMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_email"), wdb: db.GetDbW().Table("es_email"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

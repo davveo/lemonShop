@@ -19,7 +19,7 @@ func NewMemberPointHistoryMgr(db db.Repo) *MemberPointHistoryMgr {
 		panic(fmt.Errorf("NewMemberPointHistoryMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &MemberPointHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_point_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &MemberPointHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_point_history"), wdb: db.GetDbW().Table("es_member_point_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

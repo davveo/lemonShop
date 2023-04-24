@@ -19,7 +19,7 @@ func NewQuantityLogMgr(db db.Repo) *QuantityLogMgr {
 		panic(fmt.Errorf("NewQuantityLogMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &QuantityLogMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_quantity_log"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &QuantityLogMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_quantity_log"), wdb: db.GetDbW().Table("es_quantity_log"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

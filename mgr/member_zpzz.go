@@ -19,7 +19,7 @@ func NewMemberZpzzMgr(db db.Repo) *MemberZpzzMgr {
 		panic(fmt.Errorf("NewMemberZpzzMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &MemberZpzzMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_zpzz"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &MemberZpzzMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_zpzz"), wdb: db.GetDbW().Table("es_member_zpzz"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewSMTPMgr(db db.Repo) *SMTPMgr {
 		panic(fmt.Errorf("NewSMTPMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &SMTPMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_smtp"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &SMTPMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_smtp"), wdb: db.GetDbW().Table("es_smtp"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

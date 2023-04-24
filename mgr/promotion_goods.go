@@ -19,7 +19,7 @@ func NewPromotionGoodsMgr(db db.Repo) *PromotionGoodsMgr {
 		panic(fmt.Errorf("NewPromotionGoodsMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &PromotionGoodsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_promotion_goods"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &PromotionGoodsMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_promotion_goods"), wdb: db.GetDbW().Table("es_promotion_goods"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

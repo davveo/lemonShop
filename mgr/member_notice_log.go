@@ -19,7 +19,7 @@ func NewMemberNoticeLogMgr(db db.Repo) *MemberNoticeLogMgr {
 		panic(fmt.Errorf("NewMemberNoticeLogMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &MemberNoticeLogMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_notice_log"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &MemberNoticeLogMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_member_notice_log"), wdb: db.GetDbW().Table("es_member_notice_log"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

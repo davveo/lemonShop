@@ -19,7 +19,7 @@ func NewKeywordSearchHistoryMgr(db db.Repo) *KeywordSearchHistoryMgr {
 		panic(fmt.Errorf("NewKeywordSearchHistoryMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &KeywordSearchHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_keyword_search_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &KeywordSearchHistoryMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_keyword_search_history"), wdb: db.GetDbW().Table("es_keyword_search_history"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

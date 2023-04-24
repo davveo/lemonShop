@@ -19,7 +19,7 @@ func NewReceiptFileMgr(db db.Repo) *ReceiptFileMgr {
 		panic(fmt.Errorf("NewReceiptFileMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ReceiptFileMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_file"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ReceiptFileMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_receipt_file"), wdb: db.GetDbW().Table("es_receipt_file"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

@@ -19,7 +19,7 @@ func NewSssOrderData2017Mgr(db db.Repo) *SssOrderData2017Mgr {
 		panic(fmt.Errorf("NewSssOrderData2017Mgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &SssOrderData2017Mgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_order_data_2017"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &SssOrderData2017Mgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_sss_order_data_2017"), wdb: db.GetDbW().Table("es_sss_order_data_2017"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

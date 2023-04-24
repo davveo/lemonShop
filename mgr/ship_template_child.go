@@ -19,7 +19,7 @@ func NewShipTemplateChildMgr(db db.Repo) *ShipTemplateChildMgr {
 		panic(fmt.Errorf("NewShipTemplateChildMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ShipTemplateChildMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_ship_template_child"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ShipTemplateChildMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_ship_template_child"), wdb: db.GetDbW().Table("es_ship_template_child"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

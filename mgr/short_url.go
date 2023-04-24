@@ -19,7 +19,7 @@ func NewShortURLMgr(db db.Repo) *ShortURLMgr {
 		panic(fmt.Errorf("NewShortURLMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &ShortURLMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_short_url"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ShortURLMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_short_url"), wdb: db.GetDbW().Table("es_short_url"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

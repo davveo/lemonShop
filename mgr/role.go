@@ -19,7 +19,7 @@ func NewRoleMgr(db db.Repo) *RoleMgr {
 		panic(fmt.Errorf("NewRoleMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &RoleMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_role"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &RoleMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_role"), wdb: db.GetDbW().Table("es_role"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

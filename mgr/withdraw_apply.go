@@ -19,7 +19,7 @@ func NewWithdrawApplyMgr(db db.Repo) *WithdrawApplyMgr {
 		panic(fmt.Errorf("NewWithdrawApplyMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &WithdrawApplyMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_withdraw_apply"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &WithdrawApplyMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_withdraw_apply"), wdb: db.GetDbW().Table("es_withdraw_apply"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

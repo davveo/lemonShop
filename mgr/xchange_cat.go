@@ -19,7 +19,7 @@ func EsExchangeCatMgr(db db.Repo) *xchangeCatMgr {
 		panic(fmt.Errorf("EsExchangeCatMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &xchangeCatMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_exchange_cat"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &xchangeCatMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_exchange_cat"), wdb: db.GetDbW().Table("es_exchange_cat"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字

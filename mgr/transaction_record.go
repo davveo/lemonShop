@@ -19,7 +19,7 @@ func NewTransactionRecordMgr(db db.Repo) *TransactionRecordMgr {
 		panic(fmt.Errorf("NewTransactionRecordMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &TransactionRecordMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_transaction_record"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &TransactionRecordMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_transaction_record"), wdb: db.GetDbW().Table("es_transaction_record"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字
