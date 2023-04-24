@@ -16,7 +16,7 @@ type AdminUserMgr struct {
 // NewAdminUserMgr open func
 func NewAdminUserMgr(db db.Repo) *AdminUserMgr {
 	if db == nil {
-		panic(fmt.Errorf("EsSpecificationDao need init by db"))
+		panic(fmt.Errorf("NewAdminUserMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &AdminUserMgr{_BaseMgr: &_BaseMgr{

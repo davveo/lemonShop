@@ -24,11 +24,13 @@ type SpecsService interface {
 
 type specsService struct {
 	specificationMgr *mgr.SpecificationMgr
+	categorySpecMgr  *mgr.CategorySpecMgr
 }
 
 func NewSpecsService() SpecsService {
 	return &specsService{
 		specificationMgr: mgr.NewSpecificationMgr(dbLocal.GRpo),
+		categorySpecMgr:  mgr.NewCategorySpecMgr(dbLocal.GRpo),
 	}
 }
 
@@ -68,7 +70,7 @@ func (s *specsService) Get(ctx *gin.Context, specs *entity.Specs) error {
 
 func (s *specsService) Create(ctx *gin.Context, specs *entity.Specs) error {
 	ops := []mgr.Option{
-		s.specificationMgr.WithDisabled(consts.DefaultDisabled),
+		s.specificationMgr.WithDisabled(consts.DefaultEnabled),
 		s.specificationMgr.WithSellerID(consts.DefaultSellerId),
 		s.specificationMgr.WithSpecName(specs.SpecName),
 	}
@@ -79,7 +81,7 @@ func (s *specsService) Create(ctx *gin.Context, specs *entity.Specs) error {
 	if len(list) > 0 {
 		return errors.New("规格名称重复")
 	}
-	specs.Disabled = consts.DefaultDisabled
+	specs.Disabled = consts.DefaultEnabled
 	specification := new(models.EsSpecification)
 	if err := copier.Copy(specification, specs); err != nil {
 		return err
@@ -105,6 +107,18 @@ func (s *specsService) Update(ctx *gin.Context, specs *entity.Specs) error {
 }
 
 func (s *specsService) Delete(ctx *gin.Context, req []int64) error {
+	categorySpecList, err := s.categorySpecMgr.GetBatchFromSpecID(req)
+	if err != nil {
+		return err
+	}
+	if len(categorySpecList) > 0 {
+		return errors.New("有分类已经绑定要删除的规格，请先解绑分类规格")
+	}
+	if err = s.specificationMgr.Update(map[string]interface{}{
+		"disabled": consts.DefaultDisabled,
+	}, s.specificationMgr.WithInSpecID(req)); err != nil {
+		return err
+	}
 	return nil
 }
 

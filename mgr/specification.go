@@ -45,6 +45,11 @@ func (obj *SpecificationMgr) WithSpecID(specID int) Option {
 	return optionFunc(func(o *options) { o.query["spec_id"] = specID })
 }
 
+// WithInSpecID spec_id获取 主键
+func (obj *SpecificationMgr) WithInSpecID(specID []int64) Option {
+	return optionFunc(func(o *options) { o.query["spec_id"] = specID })
+}
+
 // WithSpecName spec_name获取 规格项名称
 func (obj *SpecificationMgr) WithSpecName(specName string) Option {
 	return optionFunc(func(o *options) { o.query["spec_name"] = specName })
@@ -171,10 +176,16 @@ func (obj *SpecificationMgr) Create(specs *models.EsSpecification) (err error) {
 	return
 }
 
-func (obj *SpecificationMgr) Update(specID int, updates map[string]interface{}) (err error) {
-	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSpecification{}).
-		Where("`spec_id` = ?", specID).Updates(updates).Error
+func (obj *SpecificationMgr) Update(updates map[string]interface{}, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
 
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSpecification{}).
+		Where(options.query).Updates(updates).Error
 	return
 }
 
