@@ -8,47 +8,47 @@ import (
 	"gorm.io/gorm"
 )
 
-type _EsShopRoleMgr struct {
+type ShopRoleMgr struct {
 	*_BaseMgr
 }
 
-// EsShopRoleMgr open func
-func EsShopRoleMgr(db *gorm.DB) *_EsShopRoleMgr {
+// NewShopRoleMgr open func
+func NewShopRoleMgr(db db.Repo) *ShopRoleMgr {
 	if db == nil {
-		panic(fmt.Errorf("EsShopRoleMgr need init by db"))
+		panic(fmt.Errorf("NewShopRoleMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &_EsShopRoleMgr{_BaseMgr: &_BaseMgr{DB: db.Table("es_shop_role"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &ShopRoleMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_shop_role"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字
-func (obj *_EsShopRoleMgr) GetTableName() string {
+func (obj *ShopRoleMgr) GetTableName() string {
 	return "es_shop_role"
 }
 
 // Reset 重置gorm会话
-func (obj *_EsShopRoleMgr) Reset() *_EsShopRoleMgr {
+func (obj *ShopRoleMgr) Reset() *ShopRoleMgr {
 	obj.New()
 	return obj
 }
 
 // Get 获取
-func (obj *_EsShopRoleMgr) Get() (result models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).First(&result).Error
+func (obj *ShopRoleMgr) Get() (result models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).First(&result).Error
 
 	return
 }
 
 // Gets 获取批量结果
-func (obj *_EsShopRoleMgr) Gets() (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Find(&results).Error
+func (obj *ShopRoleMgr) Gets() (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Find(&results).Error
 
 	return
 }
 
 // //////////////////////////////// gorm replace /////////////////////////////////
-func (obj *_EsShopRoleMgr) Count(count *int64) (tx *gorm.DB) {
-	return obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Count(count)
+func (obj *ShopRoleMgr) Count(count *int64) (tx *gorm.DB) {
+	return obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Count(count)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -56,32 +56,32 @@ func (obj *_EsShopRoleMgr) Count(count *int64) (tx *gorm.DB) {
 //////////////////////////option case ////////////////////////////////////////////
 
 // WithRoleID role_id获取 角色主键
-func (obj *_EsShopRoleMgr) WithRoleID(roleID int) Option {
+func (obj *ShopRoleMgr) WithRoleID(roleID int) Option {
 	return optionFunc(func(o *options) { o.query["role_id"] = roleID })
 }
 
 // WithRoleName role_name获取 角色名称
-func (obj *_EsShopRoleMgr) WithRoleName(roleName string) Option {
+func (obj *ShopRoleMgr) WithRoleName(roleName string) Option {
 	return optionFunc(func(o *options) { o.query["role_name"] = roleName })
 }
 
 // WithAuthIDs auth_ids获取 角色
-func (obj *_EsShopRoleMgr) WithAuthIDs(authIDs string) Option {
+func (obj *ShopRoleMgr) WithAuthIDs(authIDs string) Option {
 	return optionFunc(func(o *options) { o.query["auth_ids"] = authIDs })
 }
 
 // WithRoleDescribe role_describe获取 角色描述
-func (obj *_EsShopRoleMgr) WithRoleDescribe(roleDescribe string) Option {
+func (obj *ShopRoleMgr) WithRoleDescribe(roleDescribe string) Option {
 	return optionFunc(func(o *options) { o.query["role_describe"] = roleDescribe })
 }
 
 // WithShopID shop_id获取 店铺id
-func (obj *_EsShopRoleMgr) WithShopID(shopID int) Option {
+func (obj *ShopRoleMgr) WithShopID(shopID int) Option {
 	return optionFunc(func(o *options) { o.query["shop_id"] = shopID })
 }
 
 // GetByOption 功能选项模式获取
-func (obj *_EsShopRoleMgr) GetByOption(opts ...Option) (result models.EsShopRole, err error) {
+func (obj *ShopRoleMgr) GetByOption(opts ...Option) (result models.EsShopRole, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -89,13 +89,13 @@ func (obj *_EsShopRoleMgr) GetByOption(opts ...Option) (result models.EsShopRole
 		o.apply(&options)
 	}
 
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query).First(&result).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query).First(&result).Error
 
 	return
 }
 
 // GetByOptions 批量功能选项模式获取
-func (obj *_EsShopRoleMgr) GetByOptions(opts ...Option) (results []*models.EsShopRole, err error) {
+func (obj *ShopRoleMgr) GetByOptions(opts ...Option) (results []*models.EsShopRole, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -103,13 +103,13 @@ func (obj *_EsShopRoleMgr) GetByOptions(opts ...Option) (results []*models.EsSho
 		o.apply(&options)
 	}
 
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query).Find(&results).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query).Find(&results).Error
 
 	return
 }
 
 // SelectPage 分页查询
-func (obj *_EsShopRoleMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
+func (obj *ShopRoleMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -119,7 +119,7 @@ func (obj *_EsShopRoleMgr) SelectPage(page IPage, opts ...Option) (resultPage IP
 	resultPage = page
 	results := make([]models.EsShopRole, 0)
 	var count int64 // 统计总的记录数
-	query := obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query)
+	query := obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -134,71 +134,71 @@ func (obj *_EsShopRoleMgr) SelectPage(page IPage, opts ...Option) (resultPage IP
 //////////////////////////enume case ////////////////////////////////////////////
 
 // GetFromRoleID 通过role_id获取内容 角色主键
-func (obj *_EsShopRoleMgr) GetFromRoleID(roleID int) (result models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` = ?", roleID).First(&result).Error
+func (obj *ShopRoleMgr) GetFromRoleID(roleID int) (result models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` = ?", roleID).First(&result).Error
 
 	return
 }
 
 // GetBatchFromRoleID 批量查找 角色主键
-func (obj *_EsShopRoleMgr) GetBatchFromRoleID(roleIDs []int) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` IN (?)", roleIDs).Find(&results).Error
+func (obj *ShopRoleMgr) GetBatchFromRoleID(roleIDs []int) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` IN (?)", roleIDs).Find(&results).Error
 
 	return
 }
 
 // GetFromRoleName 通过role_name获取内容 角色名称
-func (obj *_EsShopRoleMgr) GetFromRoleName(roleName string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_name` = ?", roleName).Find(&results).Error
+func (obj *ShopRoleMgr) GetFromRoleName(roleName string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_name` = ?", roleName).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromRoleName 批量查找 角色名称
-func (obj *_EsShopRoleMgr) GetBatchFromRoleName(roleNames []string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_name` IN (?)", roleNames).Find(&results).Error
+func (obj *ShopRoleMgr) GetBatchFromRoleName(roleNames []string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_name` IN (?)", roleNames).Find(&results).Error
 
 	return
 }
 
 // GetFromAuthIDs 通过auth_ids获取内容 角色
-func (obj *_EsShopRoleMgr) GetFromAuthIDs(authIDs string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`auth_ids` = ?", authIDs).Find(&results).Error
+func (obj *ShopRoleMgr) GetFromAuthIDs(authIDs string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`auth_ids` = ?", authIDs).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromAuthIDs 批量查找 角色
-func (obj *_EsShopRoleMgr) GetBatchFromAuthIDs(authIDss []string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`auth_ids` IN (?)", authIDss).Find(&results).Error
+func (obj *ShopRoleMgr) GetBatchFromAuthIDs(authIDss []string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`auth_ids` IN (?)", authIDss).Find(&results).Error
 
 	return
 }
 
 // GetFromRoleDescribe 通过role_describe获取内容 角色描述
-func (obj *_EsShopRoleMgr) GetFromRoleDescribe(roleDescribe string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_describe` = ?", roleDescribe).Find(&results).Error
+func (obj *ShopRoleMgr) GetFromRoleDescribe(roleDescribe string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_describe` = ?", roleDescribe).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromRoleDescribe 批量查找 角色描述
-func (obj *_EsShopRoleMgr) GetBatchFromRoleDescribe(roleDescribes []string) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_describe` IN (?)", roleDescribes).Find(&results).Error
+func (obj *ShopRoleMgr) GetBatchFromRoleDescribe(roleDescribes []string) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_describe` IN (?)", roleDescribes).Find(&results).Error
 
 	return
 }
 
 // GetFromShopID 通过shop_id获取内容 店铺id
-func (obj *_EsShopRoleMgr) GetFromShopID(shopID int) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`shop_id` = ?", shopID).Find(&results).Error
+func (obj *ShopRoleMgr) GetFromShopID(shopID int) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`shop_id` = ?", shopID).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromShopID 批量查找 店铺id
-func (obj *_EsShopRoleMgr) GetBatchFromShopID(shopIDs []int) (results []*models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`shop_id` IN (?)", shopIDs).Find(&results).Error
+func (obj *ShopRoleMgr) GetBatchFromShopID(shopIDs []int) (results []*models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`shop_id` IN (?)", shopIDs).Find(&results).Error
 
 	return
 }
@@ -206,8 +206,8 @@ func (obj *_EsShopRoleMgr) GetBatchFromShopID(shopIDs []int) (results []*models.
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *_EsShopRoleMgr) FetchByPrimaryKey(roleID int) (result models.EsShopRole, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` = ?", roleID).First(&result).Error
+func (obj *ShopRoleMgr) FetchByPrimaryKey(roleID int) (result models.EsShopRole, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsShopRole{}).Where("`role_id` = ?", roleID).First(&result).Error
 
 	return
 }

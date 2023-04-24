@@ -8,47 +8,47 @@ import (
 	"gorm.io/gorm"
 )
 
-type _EsUploaderMgr struct {
+type UploaderMgr struct {
 	*_BaseMgr
 }
 
-// EsUploaderMgr open func
-func EsUploaderMgr(db *gorm.DB) *_EsUploaderMgr {
+// NewUploaderMgr open func
+func NewUploaderMgr(db db.Repo) *UploaderMgr {
 	if db == nil {
-		panic(fmt.Errorf("EsUploaderMgr need init by db"))
+		panic(fmt.Errorf("NewUploaderMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	return &_EsUploaderMgr{_BaseMgr: &_BaseMgr{DB: db.Table("es_uploader"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+	return &UploaderMgr{_BaseMgr: &_BaseMgr{rdb: db.GetDbR().Table("es_uploader"), isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
 // GetTableName get sql table name.获取数据库名字
-func (obj *_EsUploaderMgr) GetTableName() string {
+func (obj *UploaderMgr) GetTableName() string {
 	return "es_uploader"
 }
 
 // Reset 重置gorm会话
-func (obj *_EsUploaderMgr) Reset() *_EsUploaderMgr {
+func (obj *UploaderMgr) Reset() *UploaderMgr {
 	obj.New()
 	return obj
 }
 
 // Get 获取
-func (obj *_EsUploaderMgr) Get() (result models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).First(&result).Error
+func (obj *UploaderMgr) Get() (result models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).First(&result).Error
 
 	return
 }
 
 // Gets 获取批量结果
-func (obj *_EsUploaderMgr) Gets() (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Find(&results).Error
+func (obj *UploaderMgr) Gets() (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Find(&results).Error
 
 	return
 }
 
 // //////////////////////////////// gorm replace /////////////////////////////////
-func (obj *_EsUploaderMgr) Count(count *int64) (tx *gorm.DB) {
-	return obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Count(count)
+func (obj *UploaderMgr) Count(count *int64) (tx *gorm.DB) {
+	return obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Count(count)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -56,32 +56,32 @@ func (obj *_EsUploaderMgr) Count(count *int64) (tx *gorm.DB) {
 //////////////////////////option case ////////////////////////////////////////////
 
 // WithID id获取 储存id
-func (obj *_EsUploaderMgr) WithID(id int) Option {
+func (obj *UploaderMgr) WithID(id int) Option {
 	return optionFunc(func(o *options) { o.query["id"] = id })
 }
 
 // WithName name获取 存储名称
-func (obj *_EsUploaderMgr) WithName(name string) Option {
+func (obj *UploaderMgr) WithName(name string) Option {
 	return optionFunc(func(o *options) { o.query["name"] = name })
 }
 
 // WithOpen open获取 是否开启
-func (obj *_EsUploaderMgr) WithOpen(open int) Option {
+func (obj *UploaderMgr) WithOpen(open int) Option {
 	return optionFunc(func(o *options) { o.query["open"] = open })
 }
 
 // WithConfig config获取 存储配置
-func (obj *_EsUploaderMgr) WithConfig(config string) Option {
+func (obj *UploaderMgr) WithConfig(config string) Option {
 	return optionFunc(func(o *options) { o.query["config"] = config })
 }
 
 // WithBean bean获取 存储插件id
-func (obj *_EsUploaderMgr) WithBean(bean string) Option {
+func (obj *UploaderMgr) WithBean(bean string) Option {
 	return optionFunc(func(o *options) { o.query["bean"] = bean })
 }
 
 // GetByOption 功能选项模式获取
-func (obj *_EsUploaderMgr) GetByOption(opts ...Option) (result models.EsUploader, err error) {
+func (obj *UploaderMgr) GetByOption(opts ...Option) (result models.EsUploader, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -89,13 +89,13 @@ func (obj *_EsUploaderMgr) GetByOption(opts ...Option) (result models.EsUploader
 		o.apply(&options)
 	}
 
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query).First(&result).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query).First(&result).Error
 
 	return
 }
 
 // GetByOptions 批量功能选项模式获取
-func (obj *_EsUploaderMgr) GetByOptions(opts ...Option) (results []*models.EsUploader, err error) {
+func (obj *UploaderMgr) GetByOptions(opts ...Option) (results []*models.EsUploader, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -103,13 +103,13 @@ func (obj *_EsUploaderMgr) GetByOptions(opts ...Option) (results []*models.EsUpl
 		o.apply(&options)
 	}
 
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query).Find(&results).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query).Find(&results).Error
 
 	return
 }
 
 // SelectPage 分页查询
-func (obj *_EsUploaderMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
+func (obj *UploaderMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -119,7 +119,7 @@ func (obj *_EsUploaderMgr) SelectPage(page IPage, opts ...Option) (resultPage IP
 	resultPage = page
 	results := make([]models.EsUploader, 0)
 	var count int64 // 统计总的记录数
-	query := obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query)
+	query := obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -134,71 +134,71 @@ func (obj *_EsUploaderMgr) SelectPage(page IPage, opts ...Option) (resultPage IP
 //////////////////////////enume case ////////////////////////////////////////////
 
 // GetFromID 通过id获取内容 储存id
-func (obj *_EsUploaderMgr) GetFromID(id int) (result models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` = ?", id).First(&result).Error
+func (obj *UploaderMgr) GetFromID(id int) (result models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
 
 // GetBatchFromID 批量查找 储存id
-func (obj *_EsUploaderMgr) GetBatchFromID(ids []int) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` IN (?)", ids).Find(&results).Error
+func (obj *UploaderMgr) GetBatchFromID(ids []int) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` IN (?)", ids).Find(&results).Error
 
 	return
 }
 
 // GetFromName 通过name获取内容 存储名称
-func (obj *_EsUploaderMgr) GetFromName(name string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`name` = ?", name).Find(&results).Error
+func (obj *UploaderMgr) GetFromName(name string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`name` = ?", name).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromName 批量查找 存储名称
-func (obj *_EsUploaderMgr) GetBatchFromName(names []string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`name` IN (?)", names).Find(&results).Error
+func (obj *UploaderMgr) GetBatchFromName(names []string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`name` IN (?)", names).Find(&results).Error
 
 	return
 }
 
 // GetFromOpen 通过open获取内容 是否开启
-func (obj *_EsUploaderMgr) GetFromOpen(open int) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`open` = ?", open).Find(&results).Error
+func (obj *UploaderMgr) GetFromOpen(open int) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`open` = ?", open).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromOpen 批量查找 是否开启
-func (obj *_EsUploaderMgr) GetBatchFromOpen(opens []int) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`open` IN (?)", opens).Find(&results).Error
+func (obj *UploaderMgr) GetBatchFromOpen(opens []int) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`open` IN (?)", opens).Find(&results).Error
 
 	return
 }
 
 // GetFromConfig 通过config获取内容 存储配置
-func (obj *_EsUploaderMgr) GetFromConfig(config string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`config` = ?", config).Find(&results).Error
+func (obj *UploaderMgr) GetFromConfig(config string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`config` = ?", config).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromConfig 批量查找 存储配置
-func (obj *_EsUploaderMgr) GetBatchFromConfig(configs []string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`config` IN (?)", configs).Find(&results).Error
+func (obj *UploaderMgr) GetBatchFromConfig(configs []string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`config` IN (?)", configs).Find(&results).Error
 
 	return
 }
 
 // GetFromBean 通过bean获取内容 存储插件id
-func (obj *_EsUploaderMgr) GetFromBean(bean string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`bean` = ?", bean).Find(&results).Error
+func (obj *UploaderMgr) GetFromBean(bean string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`bean` = ?", bean).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromBean 批量查找 存储插件id
-func (obj *_EsUploaderMgr) GetBatchFromBean(beans []string) (results []*models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`bean` IN (?)", beans).Find(&results).Error
+func (obj *UploaderMgr) GetBatchFromBean(beans []string) (results []*models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`bean` IN (?)", beans).Find(&results).Error
 
 	return
 }
@@ -206,8 +206,8 @@ func (obj *_EsUploaderMgr) GetBatchFromBean(beans []string) (results []*models.E
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *_EsUploaderMgr) FetchByPrimaryKey(id int) (result models.EsUploader, err error) {
-	err = obj.DB.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` = ?", id).First(&result).Error
+func (obj *UploaderMgr) FetchByPrimaryKey(id int) (result models.EsUploader, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsUploader{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
