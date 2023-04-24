@@ -44,14 +44,9 @@ func (obj *AsChangeMgr) Gets() (results []*models.EsAsChange, err error) {
 	return
 }
 
-// //////////////////////////////// gorm replace /////////////////////////////////
 func (obj *AsChangeMgr) Count(count *int64) (tx *gorm.DB) {
 	return obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Count(count)
 }
-
-//////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////option case ////////////////////////////////////////////
 
 // WithID id获取 主键ID
 func (obj *AsChangeMgr) WithID(id int) Option {
