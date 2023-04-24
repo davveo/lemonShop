@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/davveo/lemonShop/models"
+	"github.com/davveo/lemonShop/pkg/db"
 
 	"gorm.io/gorm"
 )
@@ -71,8 +72,8 @@ func (obj *ParametersMgr) WithParamType(paramType int) Option {
 }
 
 // WithOptions options获取 选择值，当参数类型是选择项2时，必填，逗号分隔
-func (obj *ParametersMgr) WithOptions(options string) Option {
-	return optionFunc(func(o *options) { o.query["options"] = options })
+func (obj *ParametersMgr) WithOptions(opt string) Option {
+	return optionFunc(func(o *options) { o.query["options"] = opt })
 }
 
 // WithIsIndex is_index获取 是否可索引，0 不显示 1 显示
