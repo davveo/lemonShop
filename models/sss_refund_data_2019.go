@@ -1,0 +1,16 @@
+package models
+
+// EsSssRefundData2019 [...]
+type EsSssRefundData2019 struct {
+	ID          int     `gorm:"primaryKey;column:id" json:"-"`
+	SellerID    int     `gorm:"column:seller_id" json:"seller_id"`
+	RefundSn    string  `gorm:"column:refund_sn" json:"refund_sn"`
+	OrderSn     string  `gorm:"column:order_sn" json:"order_sn"`
+	RefundPrice float64 `gorm:"column:refund_price" json:"refund_price"`
+	CreateTime  int     `gorm:"column:create_time" json:"create_time"`
+}
+
+// TableName get sql table name.获取数据库表名
+func (m *EsSssRefundData2019) TableName() string {
+	return "es_sss_refund_data_2019"
+}
