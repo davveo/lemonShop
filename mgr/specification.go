@@ -3,6 +3,9 @@ package mgr
 import (
 	"context"
 	"fmt"
+
+	"github.com/davveo/lemonShop/models/vo"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -21,7 +24,8 @@ func NewSpecificationMgr(db db.Repo) *SpecificationMgr {
 	return &SpecificationMgr{_BaseMgr: &_BaseMgr{
 		rdb:       db.GetDbR().Table("es_specification"),
 		wdb:       db.GetDbW().Table("es_specification"),
-		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
+		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1},
+	}
 }
 
 // GetTableName get sql table name.获取数据库名字
@@ -100,16 +104,26 @@ func (obj *SpecificationMgr) GetByOptions(opts ...Option) (results []*models.EsS
 
 // SelectPage 分页查询
 func (obj *SpecificationMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage, err error) {
+	var specName string
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
 	for _, o := range opts {
 		o.apply(&options)
 	}
+	if val, ok := options.query["spec_name"]; ok {
+		delete(options.query, "spec_name")
+		specName = val.(string)
+	}
 	resultPage = page
 	results := make([]models.EsSpecification, 0)
 	var count int64 // 统计总的记录数
 	query := obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where(options.query)
+
+	if specName != "" {
+		query.Where("spec_name like ?", "%"+specName+"%")
+	}
+
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -165,7 +179,7 @@ func (obj *SpecificationMgr) GetBatchFromSellerID(sellerIDs []int) (results []*m
 
 // FetchByPrimaryKey primary or index 获取唯一内容
 func (obj *SpecificationMgr) FetchByPrimaryKey(specID int) (result *models.EsSpecification, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_id` = ?", specID).First(result).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecification{}).Where("`spec_id` = ?", specID).First(&result).Error
 
 	return
 }
@@ -193,7 +207,21 @@ func (obj *SpecificationMgr) DeleteBatch(specIDs []int) (err error) {
 	return nil
 }
 
-func (obj *SpecificationMgr) Raw(sql string, values ...interface{}) (err error) {
-	//tx := obj.rdb.WithContext(obj.ctx).Raw(sql, values)
-	return nil
+func (obj *SpecificationMgr) RawToStruct(where string, values ...interface{}) (res []*models.EsSpecification, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Raw(where, values...).Find(&res).Error
+
+	return
+}
+
+func (obj *SpecificationMgr) RawToMap(where string, values ...interface{}) (res []map[string]interface{}, err error) {
+	//err = obj.rdb.WithContext(obj.ctx).Raw(obj.baseSql+where, values...).Find(&res).Error
+	err = obj.rdb.WithContext(obj.ctx).Raw(where, values...).Find(&res).Error
+
+	return
+}
+
+func (obj *SpecificationMgr) RawWithSelect(sql string, values ...interface{}) (res []*vo.SelectVo, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Raw(sql, values...).Find(&res).Error
+
+	return
 }

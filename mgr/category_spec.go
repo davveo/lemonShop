@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -119,6 +120,19 @@ func (obj *CategorySpecMgr) GetFromSpecID(specID int) (results []*models.EsCateg
 // GetBatchFromSpecID 批量查找 规格id
 func (obj *CategorySpecMgr) GetBatchFromSpecID(specIDs []int64) (results []*models.EsCategorySpec, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsCategorySpec{}).Where("`spec_id` IN (?)", specIDs).Find(&results).Error
+
+	return
+}
+
+// FetchByPrimaryKey 通过id查询
+func (obj *CategorySpecMgr) FetchByPrimaryKey(categoryID int64) (result *models.EsCategorySpec, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.EsCategorySpec{}).Where("`category_id` = ?", categoryID).First(&result).Error
+
+	return
+}
+
+func (obj *CategorySpecMgr) Create(categorySpec *models.EsCategorySpec) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(categorySpec).Error
 
 	return
 }

@@ -2,6 +2,9 @@ package service
 
 import (
 	"errors"
+
+	"github.com/davveo/lemonShop/models/vo"
+
 	"github.com/davveo/lemonShop/app/consts"
 	"github.com/davveo/lemonShop/app/entity"
 	"github.com/davveo/lemonShop/mgr"
@@ -20,6 +23,7 @@ type SpecsService interface {
 	Create(ctx *gin.Context, req *entity.Specs) error
 	Update(ctx *gin.Context, req *entity.Specs) error
 	Delete(ctx *gin.Context, req []int64) error
+	GetCatSpecification(ctx *gin.Context, categoryId int64) ([]*vo.SelectVo, error)
 }
 
 type specsService struct {
@@ -36,15 +40,12 @@ func NewSpecsService() SpecsService {
 
 func (s *specsService) List(ctx *gin.Context, req *entity.SpecsListRequest) (*entity.List, error) {
 	ops := []mgr.Option{
-		s.specificationMgr.WithDisabled(consts.DefaultDisabled),
+		s.specificationMgr.WithDisabled(consts.DefaultEnabled),
 		s.specificationMgr.WithSellerID(consts.DefaultSellerId),
+		s.specificationMgr.WithSpecName(req.KeyWord),
 	}
-	if req.KeyWord != "" {
-		ops = append(ops, s.specificationMgr.WithSpecName(req.KeyWord))
-	}
-
-	resultPage, err := s.specificationMgr.SelectPage(mgr.NewPage(
-		req.PageSize, req.PageNo, mgr.BuildDesc("spec_id")), ops...)
+	page := mgr.NewPage(req.PageSize, req.PageNo, mgr.BuildDesc("spec_id"))
+	resultPage, err := s.specificationMgr.SelectPage(page, ops...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,12 +115,62 @@ func (s *specsService) Delete(ctx *gin.Context, req []int64) error {
 	if len(categorySpecList) > 0 {
 		return errors.New("有分类已经绑定要删除的规格，请先解绑分类规格")
 	}
-	if err = s.specificationMgr.Update(map[string]interface{}{
-		"disabled": consts.DefaultDisabled,
-	}, s.specificationMgr.WithInSpecID(req)); err != nil {
+	if err = s.specificationMgr.Update(
+		map[string]interface{}{
+			"disabled": consts.DefaultDisabled,
+		}, s.specificationMgr.WithInSpecID(req)); err != nil {
 		return err
 	}
 	return nil
+}
+
+func (s *specsService) GetCatSpecification(ctx *gin.Context, categoryId int64) ([]*vo.SelectVo, error) {
+	return s.specificationMgr.RawWithSelect(consts.CatSpecificationSqlString, categoryId, categoryId)
+}
+
+func (s *specsService) AddSellerSpec(ctx *gin.Context, categoryId int64, specName string) (*entity.Specs, error) {
+	if obj, err := s.categorySpecMgr.FetchByPrimaryKey(categoryId); err != nil {
+		return nil, err
+	} else if obj == nil {
+		return nil, errors.New("分类不存在")
+	}
+
+	// todo 完成用户session获取
+	userContext := entity.UserContext{}
+	seller, err := userContext.GetSeller()
+	if err != nil {
+		return nil, err
+	}
+
+	list, err := s.specificationMgr.RawToMap(consts.AddSellerSpecSql, categoryId, seller.SellerId, specName)
+	if err != nil {
+		return nil, err
+	}
+	if len(list) > 0 {
+		return nil, errors.New("规格名称重复")
+	}
+
+	specs := &entity.Specs{
+		SpecName: specName,
+		Disabled: consts.DefaultEnabled,
+		SpecMemo: "商家自定义",
+		SellerID: int(seller.SellerId),
+	}
+
+	if err = s.Create(ctx, specs); err != nil {
+		return nil, err
+	}
+
+	categorySpec := &models.EsCategorySpec{
+		CategoryID: int(categoryId),
+		SpecID:     specs.SpecID,
+	}
+	if err := s.categorySpecMgr.Create(categorySpec); err != nil {
+		return nil, err
+	}
+
+	return specs, nil
+
 }
 
 func (s *specsService) i() {}

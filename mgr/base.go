@@ -131,6 +131,38 @@ func (c *Condition) And(column string, cases string, value interface{}) *Conditi
 	return c.AndWithCondition(true, column, cases, value)
 }
 
+func (c *Condition) AndEq(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, "=", value)
+}
+
+func (c *Condition) AndNotEq(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, "!=", value)
+}
+
+func (c *Condition) AndNotLt(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, "<", value)
+}
+
+func (c *Condition) AndNotGt(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, ">", value)
+}
+
+func (c *Condition) AndNotLte(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, "<=", value)
+}
+
+func (c *Condition) AndNotGte(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, ">=", value)
+}
+
+func (c *Condition) AndLike(column string, value string) *Condition {
+	return c.AndWithCondition(true, column, "like", "%"+value+"%")
+}
+
+func (c *Condition) AndIn(column string, value interface{}) *Condition {
+	return c.AndWithCondition(true, column, "in", value)
+}
+
 func (c *Condition) OrWithCondition(condition bool, column string, cases string, value interface{}) *Condition {
 	if condition {
 		c.list = append(c.list, &conditionInfo{
@@ -172,6 +204,7 @@ func (c *Condition) Get() (where string, out []interface{}) {
 		}
 	}
 
+	where = " where" + where
 	return
 }
 
@@ -180,4 +213,21 @@ type conditionInfo struct {
 	column string // 列名
 	case_  string // 条件(in,>=,<=)
 	value  interface{}
+}
+
+func test() {
+
+	//cond := mgr.Condition{}
+	//searchCondition, out := cond.
+	//	AndNotEq("spec_id", 1).
+	//	AndLike("spec_name", "测试").
+	//	Get()
+	//results, err := s.specificationMgr.Raw(searchCondition, out...)
+	//if err != nil {
+	//	return err
+	//}
+	//for _, res := range results {
+	//	fmt.Println(res.SpecName)
+	//}
+	//s.GetCatSpecification(ctx, 1)
 }
