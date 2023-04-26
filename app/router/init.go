@@ -14,6 +14,7 @@ func Init(route *gin.Engine) {
 	checkCTRS := ctrs.NewCheckerController()
 	{
 		publicGroup.GET("check", checkCTRS.Check)
+		publicGroup.GET("test", checkCTRS.Test)
 	}
 
 	adminGroup := route.Group("/admin/admin")

@@ -23,16 +23,20 @@ type SpecsService interface {
 	Create(ctx *gin.Context, req *entity.Specs) error
 	Update(ctx *gin.Context, req *entity.Specs) error
 	Delete(ctx *gin.Context, req []int64) error
+	AddSellerSpec(ctx *gin.Context, categoryId int64, specName string) (*entity.Specs, error)
 	GetCatSpecification(ctx *gin.Context, categoryId int64) ([]*vo.SelectVo, error)
+	QuerySellerSpec(ctx *gin.Context, categoryId int64) ([]*vo.SpecificationVO, error)
 }
 
 type specsService struct {
 	specificationMgr *mgr.SpecificationMgr
 	categorySpecMgr  *mgr.CategorySpecMgr
+	specValuesMgr    *mgr.SpecValuesMgr
 }
 
 func NewSpecsService() SpecsService {
 	return &specsService{
+		specValuesMgr:    mgr.NewSpecValuesMgr(dbLocal.GRpo),
 		specificationMgr: mgr.NewSpecificationMgr(dbLocal.GRpo),
 		categorySpecMgr:  mgr.NewCategorySpecMgr(dbLocal.GRpo),
 	}
@@ -171,6 +175,55 @@ func (s *specsService) AddSellerSpec(ctx *gin.Context, categoryId int64, specNam
 
 	return specs, nil
 
+}
+
+func (s *specsService) QuerySellerSpec(ctx *gin.Context, categoryId int64) ([]*vo.SpecificationVO, error) {
+	var specificationVOList []*vo.SpecificationVO
+	// todo 完成用户session获取
+	userContext := entity.UserContext{}
+	seller, err := userContext.GetSeller()
+	if err != nil {
+		return nil, err
+	}
+
+	specificationList, err := s.specificationMgr.RawToStruct(consts.QuerySpecSql, categoryId, seller.SellerId)
+	if err != nil {
+		return specificationVOList, err
+	}
+	if len(specificationList) <= 0 {
+		return specificationVOList, nil
+	}
+
+	var specIds []int
+	for _, specification := range specificationList {
+		v := new(vo.SpecificationVO)
+		specIds = append(specIds, specification.SpecID)
+		if err := copier.Copy(v, &specification); err != nil {
+			return specificationVOList, nil
+		}
+		specificationVOList = append(specificationVOList, v)
+	}
+
+	specValuesList, err := s.specValuesMgr.GetBatchFromSpecID(specIds)
+	if err != nil {
+		return specificationVOList, err
+	}
+
+	m := make(map[int][]*models.EsSpecValues)
+	for _, specValues := range specValuesList {
+		lst, ok := m[specValues.SpecID]
+		if !ok {
+			lst = []*models.EsSpecValues{}
+		}
+		lst = append(lst, specValues)
+		m[specValues.SpecID] = lst
+	}
+
+	for _, specificationVO := range specificationVOList {
+		specificationVO.ValueList = m[specificationVO.SpecID]
+	}
+
+	return specificationVOList, nil
 }
 
 func (s *specsService) i() {}
