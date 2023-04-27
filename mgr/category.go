@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -13,10 +14,10 @@ type CategoryMgr struct {
 	*_BaseMgr
 }
 
-// EsCategoryMgr open func
-func EsCategoryMgr(db db.Repo) *CategoryMgr {
+// NewCategoryMgr open func
+func NewCategoryMgr(db db.Repo) *CategoryMgr {
 	if db == nil {
-		panic(fmt.Errorf("EsCategoryMgr need init by db"))
+		panic(fmt.Errorf("NewCategoryMgr need init by db"))
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &CategoryMgr{_BaseMgr: &_BaseMgr{
