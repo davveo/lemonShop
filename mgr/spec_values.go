@@ -208,8 +208,40 @@ func (obj *SpecValuesMgr) GetBatchFromSpecName(specNames []string) (results []*m
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *SpecValuesMgr) FetchByPrimaryKey(specValueID int) (result models.EsSpecValues, err error) {
+func (obj *SpecValuesMgr) FetchByPrimaryKey(specValueID int) (result *models.EsSpecValues, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecValues{}).Where("`spec_value_id` = ?", specValueID).First(&result).Error
 
+	return
+}
+
+func (obj *SpecValuesMgr) Create(specsValues *models.EsSpecValues) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(specsValues).Error
+
+	return
+}
+
+func (obj *SpecValuesMgr) DeleteByOpts(opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Delete(options.query).Error
+
+	return
+}
+
+func (obj *SpecValuesMgr) UpdateByModel(updates *models.EsSpecValues, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSpecValues{}).
+		Where(options.query).Updates(updates).Error
 	return
 }

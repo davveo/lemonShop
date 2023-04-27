@@ -11,3 +11,10 @@ const (
 	Seller = Role("Seller")
 	Clerk  = Role("Clerk")
 )
+
+const (
+	BuyerPermission  = Permission("Buyer")
+	SellerPermission = Permission("Seller")
+	AdminPermission  = Permission("Admin")
+	ClientPermission = Permission("Client")
+)

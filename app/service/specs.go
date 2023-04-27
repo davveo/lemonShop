@@ -107,6 +107,23 @@ func (s *specsService) Update(ctx *gin.Context, specs *entity.Specs) error {
 	if obj == nil {
 		return errors.New("规格不存在")
 	}
+	list, err := s.specificationMgr.RawToStruct(consts.SqlFour, specs.SpecName, specs.SpecID)
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		return errors.New("规格名称重复")
+	}
+
+	specification := new(models.EsSpecification)
+	if err := copier.Copy(specification, specs); err != nil {
+		return err
+	}
+
+	if err = s.specificationMgr.UpdateByModel(specification,
+		s.specificationMgr.WithSpecID(specs.SpecID)); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -129,7 +146,7 @@ func (s *specsService) Delete(ctx *gin.Context, req []int64) error {
 }
 
 func (s *specsService) GetCatSpecification(ctx *gin.Context, categoryId int64) ([]*vo.SelectVo, error) {
-	return s.specificationMgr.RawWithSelect(consts.CatSpecificationSqlString, categoryId, categoryId)
+	return s.specificationMgr.RawWithSelect(consts.SqlOne, categoryId, categoryId)
 }
 
 func (s *specsService) AddSellerSpec(ctx *gin.Context, categoryId int64, specName string) (*entity.Specs, error) {
@@ -146,7 +163,7 @@ func (s *specsService) AddSellerSpec(ctx *gin.Context, categoryId int64, specNam
 		return nil, err
 	}
 
-	list, err := s.specificationMgr.RawToMap(consts.AddSellerSpecSql, categoryId, seller.SellerId, specName)
+	list, err := s.specificationMgr.RawToMap(consts.SqlTwo, categoryId, seller.SellerId, specName)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +203,7 @@ func (s *specsService) QuerySellerSpec(ctx *gin.Context, categoryId int64) ([]*v
 		return nil, err
 	}
 
-	specificationList, err := s.specificationMgr.RawToStruct(consts.QuerySpecSql, categoryId, seller.SellerId)
+	specificationList, err := s.specificationMgr.RawToStruct(consts.SqlThree, categoryId, seller.SellerId)
 	if err != nil {
 		return specificationVOList, err
 	}

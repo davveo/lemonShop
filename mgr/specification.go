@@ -203,6 +203,19 @@ func (obj *SpecificationMgr) Update(updates map[string]interface{}, opts ...Opti
 	return
 }
 
+func (obj *SpecificationMgr) UpdateByModel(updates *models.EsSpecification, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSpecification{}).
+		Where(options.query).Updates(updates).Error
+	return
+}
+
 func (obj *SpecificationMgr) DeleteBatch(specIDs []int) (err error) {
 	return nil
 }
