@@ -34,5 +34,5 @@ rabbitmq:
 elasticsearch:
   host: 127.0.0.1
   port: 9200
-  username:
-  password:
+  username: elastic
+  password: elastic

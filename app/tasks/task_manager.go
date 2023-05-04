@@ -25,7 +25,6 @@ func (taskManager *TaskManager) AddTask(consumer Consumer) {
 }
 
 func (taskManager *TaskManager) start() error {
-	fmt.Println(taskManager.taskPool, "开始启动了....")
 	for _, task := range taskManager.taskPool {
 
 		if err := task.start(); err != nil {

@@ -40,7 +40,6 @@ func (orderConsumer *OrderConsumer) start() (err error) {
 		orderConsumer.taskNum,
 		orderConsumer.handler,
 	)
-	fmt.Println("我药开始启动了,;;;;;;;")
 	if err = orderConsumer.rabbitMQ.ConsumeStart(); err != nil {
 		logger.GLogger.Error(fmt.Sprintf("[%s] 启动失败: %s", orderConsumerName, err.Error()))
 		return
