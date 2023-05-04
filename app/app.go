@@ -2,6 +2,9 @@ package app
 
 import (
 	"fmt"
+	"log"
+	"syscall"
+
 	"github.com/davveo/lemonShop/app/router"
 	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/cache"
@@ -9,8 +12,6 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"log"
-	"syscall"
 )
 
 type Server struct {

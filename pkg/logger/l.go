@@ -2,10 +2,11 @@ package logger
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/timeutil"
 	"go.uber.org/zap"
-	"os"
 )
 
 var GLogger *zap.Logger

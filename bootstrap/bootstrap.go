@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"github.com/davveo/lemonShop/app"
+	"github.com/davveo/lemonShop/app/tasks"
 	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/cache"
 	"github.com/davveo/lemonShop/pkg/db"
@@ -29,6 +30,12 @@ func Bootstrap() {
 
 	// 初始化缓存
 	cacheRepo, err := cache.Init()
+	if err != nil {
+		panic(err)
+	}
+
+	// 启动mq消费者
+	err = tasks.Init()
 	if err != nil {
 		panic(err)
 	}

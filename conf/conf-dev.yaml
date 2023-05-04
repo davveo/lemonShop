@@ -23,3 +23,13 @@ redis:
     minIdleConn: 30
     pass: 123123
     poolSize: 10
+rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+elasticsearch:
+    host: 127.0.0.1
+    port: 9200
+    username:
+    password:

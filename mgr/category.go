@@ -249,7 +249,7 @@ func (obj *CategoryMgr) GetBatchFromImage(images []string) (results []*models.Es
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *CategoryMgr) FetchByPrimaryKey(categoryID int) (result models.EsCategory, err error) {
+func (obj *CategoryMgr) FetchByPrimaryKey(categoryID int) (result *models.EsCategory, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsCategory{}).Where("`category_id` = ?", categoryID).First(&result).Error
 
 	return
@@ -259,5 +259,37 @@ func (obj *CategoryMgr) FetchByPrimaryKey(categoryID int) (result models.EsCateg
 func (obj *CategoryMgr) FetchIndexByIndGoodsCatParentid(parentID int) (results []*models.EsCategory, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsCategory{}).Where("`parent_id` = ?", parentID).Find(&results).Error
 
+	return
+}
+
+func (obj *CategoryMgr) Create(specs *models.EsCategory) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(specs).Error
+
+	return
+}
+
+func (obj *CategoryMgr) Update(updates map[string]interface{}, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsCategory{}).
+		Where(options.query).Updates(updates).Error
+	return
+}
+
+func (obj *CategoryMgr) UpdateByModel(updates *models.EsCategory, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsCategory{}).
+		Where(options.query).Updates(updates).Error
 	return
 }

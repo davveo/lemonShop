@@ -9,11 +9,13 @@ import (
 var ConfYamlDir embed.FS
 
 type AppConf struct {
-	AppName string    `yaml:"app-name"`
-	Server  ServerCfg `yaml:"server"`
-	Redis   RedisCfg  `yaml:"redis"`
-	Mysql   MysqlCfg  `yaml:"mysql"`
-	Log     LogCfg    `yaml:"log"`
+	AppName       string           `yaml:"app-name"`
+	Server        ServerCfg        `yaml:"server"`
+	Redis         RedisCfg         `yaml:"redis"`
+	Mysql         MysqlCfg         `yaml:"mysql"`
+	Log           LogCfg           `yaml:"log"`
+	RabbitMQ      RabbitMQCfg      `yaml:"rabbitmq"`
+	Elasticsearch ElasticsearchCfg `yaml:"elasticsearch"`
 }
 
 type ServerCfg struct {
@@ -57,4 +59,18 @@ type RedisCfg struct {
 type LogCfg struct {
 	LogSavePath string `yaml:"logSavePath"`
 	TimeFormat  string `yaml:"timeFormat"`
+}
+
+type RabbitMQCfg struct {
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	UserName string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
+type ElasticsearchCfg struct {
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	UserName string `yaml:"username"`
+	Password string `yaml:"password"`
 }
