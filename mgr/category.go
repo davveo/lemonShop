@@ -2,6 +2,7 @@ package mgr
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/davveo/lemonShop/models"
@@ -21,8 +22,8 @@ func NewCategoryMgr(db db.Repo) *CategoryMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &CategoryMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_category"),
+		wdb:       db.GetDbW().Table("es_category"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
@@ -251,7 +252,9 @@ func (obj *CategoryMgr) GetBatchFromImage(images []string) (results []*models.Es
 // FetchByPrimaryKey primary or index 获取唯一内容
 func (obj *CategoryMgr) FetchByPrimaryKey(categoryID int) (result *models.EsCategory, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsCategory{}).Where("`category_id` = ?", categoryID).First(&result).Error
-
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("该分类不存在")
+	}
 	return
 }
 
@@ -291,5 +294,28 @@ func (obj *CategoryMgr) UpdateByModel(updates *models.EsCategory, opts ...Option
 
 	err = obj.wdb.WithContext(obj.ctx).Model(models.EsCategory{}).
 		Where(options.query).Updates(updates).Error
+	return
+}
+
+func (obj *CategoryMgr) RawToStruct(where string, values ...interface{}) (res []*models.EsCategory, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Raw(where, values...).Find(&res).Error
+
+	return
+}
+
+func (obj *CategoryMgr) CountByCondition(where string, count *int64, values ...interface{}) error {
+	return obj.rdb.WithContext(obj.ctx).Raw(where, values...).Count(count).Error
+}
+
+func (obj *CategoryMgr) Delete(opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Where(options.query).Delete(&models.EsCategory{}).Error
+
 	return
 }

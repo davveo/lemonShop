@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -20,8 +21,8 @@ func NewCategoryBrandMgr(db db.Repo) *CategoryBrandMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &CategoryBrandMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_category_brand"),
+		wdb:       db.GetDbW().Table("es_category_brand"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 
@@ -150,4 +151,15 @@ func (obj *CategoryBrandMgr) GetBatchFromBrandID(brandIDs []int) (results []*mod
 	return
 }
 
-//////////////////////////primary index case ////////////////////////////////////////////
+func (obj *CategoryBrandMgr) DeleteByOptions(opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.rdb.WithContext(obj.ctx).Where(options.query).Delete(&models.EsCategoryBrand{}).Error
+
+	return
+}

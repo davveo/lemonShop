@@ -2,6 +2,7 @@ package mgr
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/davveo/lemonShop/models"
@@ -210,7 +211,9 @@ func (obj *SpecValuesMgr) GetBatchFromSpecName(specNames []string) (results []*m
 // FetchByPrimaryKey primary or index 获取唯一内容
 func (obj *SpecValuesMgr) FetchByPrimaryKey(specValueID int) (result *models.EsSpecValues, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSpecValues{}).Where("`spec_value_id` = ?", specValueID).First(&result).Error
-
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, errors.New("所属规格不存在")
+	}
 	return
 }
 

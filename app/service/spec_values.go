@@ -92,8 +92,6 @@ func (s *specsValuesService) SaveSpecValue(ctx *gin.Context,
 	obj, err := s.specValuesMgr.FetchByPrimaryKey(specId)
 	if err != nil {
 		return nil, err
-	} else if obj == nil {
-		return nil, errors.New("所属规格不存在")
 	}
 
 	ops := []mgr.Option{

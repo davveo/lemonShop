@@ -1,4 +1,6 @@
 appName: lemonShop
+isUseElasticSearch: false
+isUseRabbitMq: false
 server:
   runmode: debug
   httpPort: 8080

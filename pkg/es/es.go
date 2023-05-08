@@ -27,8 +27,11 @@ import (
 var esClient *elasticsearch.Client
 var bulkIndexer esutil.BulkIndexer
 
-func InitESClient() error {
-	var err error
+func InitESClient() (err error) {
+	if !conf.Conf.IsUseElasticSearch {
+		return nil
+	}
+
 	host := conf.Conf.Elasticsearch.Host
 	port := conf.Conf.Elasticsearch.Port
 	username := conf.Conf.Elasticsearch.UserName

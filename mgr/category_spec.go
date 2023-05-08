@@ -136,3 +136,16 @@ func (obj *CategorySpecMgr) Create(categorySpec *models.EsCategorySpec) (err err
 
 	return
 }
+
+func (obj *CategorySpecMgr) DeleteByOptions(opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.rdb.WithContext(obj.ctx).Where(options.query).Delete(&models.EsCategorySpec{}).Error
+
+	return
+}

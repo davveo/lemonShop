@@ -9,13 +9,15 @@ import (
 var ConfYamlDir embed.FS
 
 type AppConf struct {
-	AppName       string           `yaml:"app-name"`
-	Server        ServerCfg        `yaml:"server"`
-	Redis         RedisCfg         `yaml:"redis"`
-	Mysql         MysqlCfg         `yaml:"mysql"`
-	Log           LogCfg           `yaml:"log"`
-	RabbitMQ      RabbitMQCfg      `yaml:"rabbitmq"`
-	Elasticsearch ElasticsearchCfg `yaml:"elasticsearch"`
+	AppName            string           `yaml:"app-name"`
+	IsUseElasticSearch bool             `yaml:"isUseElasticSearch"`
+	IsUseRabbitMq      bool             `yaml:"isUseRabbitMq"`
+	Server             ServerCfg        `yaml:"server"`
+	Redis              RedisCfg         `yaml:"redis"`
+	Mysql              MysqlCfg         `yaml:"mysql"`
+	Log                LogCfg           `yaml:"log"`
+	RabbitMQ           RabbitMQCfg      `yaml:"rabbitmq"`
+	Elasticsearch      ElasticsearchCfg `yaml:"elasticsearch"`
 }
 
 type ServerCfg struct {
