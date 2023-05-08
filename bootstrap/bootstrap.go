@@ -8,6 +8,7 @@ import (
 	"github.com/davveo/lemonShop/pkg/db"
 	"github.com/davveo/lemonShop/pkg/es"
 	"github.com/davveo/lemonShop/pkg/logger"
+	"github.com/davveo/lemonShop/pkg/pool"
 )
 
 func Bootstrap() {
@@ -43,6 +44,11 @@ func Bootstrap() {
 
 	// 启动es
 	err = es.InitESClient()
+	if err != nil {
+		panic(err)
+	}
+
+	err = pool.InitPool()
 	if err != nil {
 		panic(err)
 	}

@@ -1,6 +1,10 @@
 appName: lemonShop
 isUseElasticSearch: false
 isUseRabbitMq: false
+isUseRoutinePool: false
+commonGoRoutinePoolSize: 10
+commonGoRoutinePoolMinuteExpire: 5
+commonGoRoutinePoolMaxBlockingTasks: 0
 server:
   runmode: debug
   httpPort: 8080
