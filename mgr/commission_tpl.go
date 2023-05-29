@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -20,8 +21,8 @@ func NewCommissionTplMgr(db db.Repo) *CommissionTplMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &CommissionTplMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_commission_tpl"),
+		wdb:       db.GetDbW().Table("es_commission_tpl"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 

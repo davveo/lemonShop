@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -20,8 +21,8 @@ func NewAskMessageMgr(db db.Repo) *AskMessageMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &AskMessageMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_ask_message"),
+		wdb:       db.GetDbW().Table("es_ask_message"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 

@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -20,8 +21,8 @@ func NewGroupbuyAreaMgr(db db.Repo) *GroupbuyAreaMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &GroupbuyAreaMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_groupbuy_area"),
+		wdb:       db.GetDbW().Table("es_groupbuy_area"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 

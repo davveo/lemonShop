@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 	"gorm.io/gorm"
@@ -19,8 +20,8 @@ func NewAsGalleryMgr(db db.Repo) *AsGalleryMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &AsGalleryMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_as_gallery"),
+		wdb:       db.GetDbW().Table("es_as_gallery"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 

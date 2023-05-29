@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -20,8 +21,8 @@ func NewSssGoodsDataMgr(db db.Repo) *SssGoodsDataMgr {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	return &SssGoodsDataMgr{_BaseMgr: &_BaseMgr{
-		rdb:       db.GetDbR().Table("es_category_spec"),
-		wdb:       db.GetDbW().Table("es_category_spec"),
+		rdb:       db.GetDbR().Table("es_sss_goods_data"),
+		wdb:       db.GetDbW().Table("es_sss_goods_data"),
 		isRelated: globalIsRelated, ctx: ctx, cancel: cancel, timeout: -1}}
 }
 

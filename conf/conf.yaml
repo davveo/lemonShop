@@ -6,7 +6,7 @@ commonGoRoutinePoolSize: 10
 commonGoRoutinePoolMinuteExpire: 5
 commonGoRoutinePoolMaxBlockingTasks: 0
 server:
-  runmode: debug
+  runMode: debug
   httpPort: 8080
   readTimeOut: 60
   writeTimeOut: 60
