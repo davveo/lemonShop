@@ -1,7 +1,7 @@
 package models
 
-// EsAsChange 售后服务用户收货地址信息表(es_as_change)
-type EsAsChange struct {
+// AsChange 售后服务用户收货地址信息表(es_as_change)
+type AsChange struct {
 	ID         int    `gorm:"primaryKey;column:id" json:"-"`         // 主键ID
 	ServiceSn  string `gorm:"column:service_sn" json:"service_sn"`   // 售后服务单号
 	ShipName   string `gorm:"column:ship_name" json:"ship_name"`     // 收货人姓名
@@ -18,6 +18,6 @@ type EsAsChange struct {
 }
 
 // TableName get sql table name.获取数据库表名
-func (m *EsAsChange) TableName() string {
+func (m *AsChange) TableName() string {
 	return "es_as_change"
 }

@@ -32,21 +32,21 @@ func (obj *AsChangeMgr) GetTableName() string {
 }
 
 // Get 获取
-func (obj *AsChangeMgr) Get() (result models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).First(&result).Error
+func (obj *AsChangeMgr) Get() (result models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).First(&result).Error
 
 	return
 }
 
 // Gets 获取批量结果
-func (obj *AsChangeMgr) Gets() (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Find(&results).Error
+func (obj *AsChangeMgr) Gets() (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Find(&results).Error
 
 	return
 }
 
 func (obj *AsChangeMgr) Count(count *int64) (tx *gorm.DB) {
-	return obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Count(count)
+	return obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Count(count)
 }
 
 // WithID id获取 主键ID
@@ -115,7 +115,7 @@ func (obj *AsChangeMgr) WithShipMobile(shipMobile string) Option {
 }
 
 // GetByOption 功能选项模式获取
-func (obj *AsChangeMgr) GetByOption(opts ...Option) (result models.EsAsChange, err error) {
+func (obj *AsChangeMgr) GetByOption(opts ...Option) (result *models.AsChange, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -123,13 +123,13 @@ func (obj *AsChangeMgr) GetByOption(opts ...Option) (result models.EsAsChange, e
 		o.apply(&options)
 	}
 
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where(options.query).First(&result).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where(options.query).First(&result).Error
 
 	return
 }
 
 // GetByOptions 批量功能选项模式获取
-func (obj *AsChangeMgr) GetByOptions(opts ...Option) (results []*models.EsAsChange, err error) {
+func (obj *AsChangeMgr) GetByOptions(opts ...Option) (results []*models.AsChange, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -137,7 +137,7 @@ func (obj *AsChangeMgr) GetByOptions(opts ...Option) (results []*models.EsAsChan
 		o.apply(&options)
 	}
 
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where(options.query).Find(&results).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where(options.query).Find(&results).Error
 
 	return
 }
@@ -151,9 +151,9 @@ func (obj *AsChangeMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage
 		o.apply(&options)
 	}
 	resultPage = page
-	results := make([]models.EsAsChange, 0)
+	results := make([]models.AsChange, 0)
 	var count int64 // 统计总的记录数
-	query := obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where(options.query)
+	query := obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -168,183 +168,183 @@ func (obj *AsChangeMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage
 //////////////////////////enume case ////////////////////////////////////////////
 
 // GetFromID 通过id获取内容 主键ID
-func (obj *AsChangeMgr) GetFromID(id int) (result models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`id` = ?", id).First(&result).Error
+func (obj *AsChangeMgr) GetFromID(id int) (result models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
 
 // GetBatchFromID 批量查找 主键ID
-func (obj *AsChangeMgr) GetBatchFromID(ids []int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`id` IN (?)", ids).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromID(ids []int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`id` IN (?)", ids).Find(&results).Error
 
 	return
 }
 
 // GetFromServiceSn 通过service_sn获取内容 售后服务单号
-func (obj *AsChangeMgr) GetFromServiceSn(serviceSn string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`service_sn` = ?", serviceSn).Find(&results).Error
+func (obj *AsChangeMgr) GetFromServiceSn(serviceSn string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`service_sn` = ?", serviceSn).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromServiceSn 批量查找 售后服务单号
-func (obj *AsChangeMgr) GetBatchFromServiceSn(serviceSns []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`service_sn` IN (?)", serviceSns).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromServiceSn(serviceSns []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`service_sn` IN (?)", serviceSns).Find(&results).Error
 
 	return
 }
 
 // GetFromShipName 通过ship_name获取内容 收货人姓名
-func (obj *AsChangeMgr) GetFromShipName(shipName string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_name` = ?", shipName).Find(&results).Error
+func (obj *AsChangeMgr) GetFromShipName(shipName string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_name` = ?", shipName).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromShipName 批量查找 收货人姓名
-func (obj *AsChangeMgr) GetBatchFromShipName(shipNames []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_name` IN (?)", shipNames).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromShipName(shipNames []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_name` IN (?)", shipNames).Find(&results).Error
 
 	return
 }
 
 // GetFromProvinceID 通过province_id获取内容 收货地址省份id
-func (obj *AsChangeMgr) GetFromProvinceID(provinceID int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`province_id` = ?", provinceID).Find(&results).Error
+func (obj *AsChangeMgr) GetFromProvinceID(provinceID int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`province_id` = ?", provinceID).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromProvinceID 批量查找 收货地址省份id
-func (obj *AsChangeMgr) GetBatchFromProvinceID(provinceIDs []int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`province_id` IN (?)", provinceIDs).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromProvinceID(provinceIDs []int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`province_id` IN (?)", provinceIDs).Find(&results).Error
 
 	return
 }
 
 // GetFromCityID 通过city_id获取内容 收货地址城市id
-func (obj *AsChangeMgr) GetFromCityID(cityID int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`city_id` = ?", cityID).Find(&results).Error
+func (obj *AsChangeMgr) GetFromCityID(cityID int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`city_id` = ?", cityID).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCityID 批量查找 收货地址城市id
-func (obj *AsChangeMgr) GetBatchFromCityID(cityIDs []int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`city_id` IN (?)", cityIDs).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromCityID(cityIDs []int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`city_id` IN (?)", cityIDs).Find(&results).Error
 
 	return
 }
 
 // GetFromCountyID 通过county_id获取内容 收货地址区县id
-func (obj *AsChangeMgr) GetFromCountyID(countyID int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`county_id` = ?", countyID).Find(&results).Error
+func (obj *AsChangeMgr) GetFromCountyID(countyID int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`county_id` = ?", countyID).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCountyID 批量查找 收货地址区县id
-func (obj *AsChangeMgr) GetBatchFromCountyID(countyIDs []int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`county_id` IN (?)", countyIDs).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromCountyID(countyIDs []int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`county_id` IN (?)", countyIDs).Find(&results).Error
 
 	return
 }
 
 // GetFromTownID 通过town_id获取内容 收货地址城镇id
-func (obj *AsChangeMgr) GetFromTownID(townID int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`town_id` = ?", townID).Find(&results).Error
+func (obj *AsChangeMgr) GetFromTownID(townID int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`town_id` = ?", townID).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromTownID 批量查找 收货地址城镇id
-func (obj *AsChangeMgr) GetBatchFromTownID(townIDs []int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`town_id` IN (?)", townIDs).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromTownID(townIDs []int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`town_id` IN (?)", townIDs).Find(&results).Error
 
 	return
 }
 
 // GetFromProvince 通过province获取内容 收货地址省份名称
-func (obj *AsChangeMgr) GetFromProvince(province string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`province` = ?", province).Find(&results).Error
+func (obj *AsChangeMgr) GetFromProvince(province string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`province` = ?", province).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromProvince 批量查找 收货地址省份名称
-func (obj *AsChangeMgr) GetBatchFromProvince(provinces []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`province` IN (?)", provinces).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromProvince(provinces []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`province` IN (?)", provinces).Find(&results).Error
 
 	return
 }
 
 // GetFromCity 通过city获取内容 收货地址城市名称
-func (obj *AsChangeMgr) GetFromCity(city string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`city` = ?", city).Find(&results).Error
+func (obj *AsChangeMgr) GetFromCity(city string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`city` = ?", city).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCity 批量查找 收货地址城市名称
-func (obj *AsChangeMgr) GetBatchFromCity(citys []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`city` IN (?)", citys).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromCity(citys []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`city` IN (?)", citys).Find(&results).Error
 
 	return
 }
 
 // GetFromCounty 通过county获取内容 收货地址县(区)名称
-func (obj *AsChangeMgr) GetFromCounty(county string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`county` = ?", county).Find(&results).Error
+func (obj *AsChangeMgr) GetFromCounty(county string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`county` = ?", county).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCounty 批量查找 收货地址县(区)名称
-func (obj *AsChangeMgr) GetBatchFromCounty(countys []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`county` IN (?)", countys).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromCounty(countys []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`county` IN (?)", countys).Find(&results).Error
 
 	return
 }
 
 // GetFromTown 通过town获取内容 收货地址城镇名称
-func (obj *AsChangeMgr) GetFromTown(town string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`town` = ?", town).Find(&results).Error
+func (obj *AsChangeMgr) GetFromTown(town string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`town` = ?", town).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromTown 批量查找 收货地址城镇名称
-func (obj *AsChangeMgr) GetBatchFromTown(towns []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`town` IN (?)", towns).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromTown(towns []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`town` IN (?)", towns).Find(&results).Error
 
 	return
 }
 
 // GetFromShipAddr 通过ship_addr获取内容 收货地址
-func (obj *AsChangeMgr) GetFromShipAddr(shipAddr string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_addr` = ?", shipAddr).Find(&results).Error
+func (obj *AsChangeMgr) GetFromShipAddr(shipAddr string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_addr` = ?", shipAddr).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromShipAddr 批量查找 收货地址
-func (obj *AsChangeMgr) GetBatchFromShipAddr(shipAddrs []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_addr` IN (?)", shipAddrs).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromShipAddr(shipAddrs []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_addr` IN (?)", shipAddrs).Find(&results).Error
 
 	return
 }
 
 // GetFromShipMobile 通过ship_mobile获取内容 收货人手机号
-func (obj *AsChangeMgr) GetFromShipMobile(shipMobile string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_mobile` = ?", shipMobile).Find(&results).Error
+func (obj *AsChangeMgr) GetFromShipMobile(shipMobile string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_mobile` = ?", shipMobile).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromShipMobile 批量查找 收货人手机号
-func (obj *AsChangeMgr) GetBatchFromShipMobile(shipMobiles []string) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`ship_mobile` IN (?)", shipMobiles).Find(&results).Error
+func (obj *AsChangeMgr) GetBatchFromShipMobile(shipMobiles []string) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`ship_mobile` IN (?)", shipMobiles).Find(&results).Error
 
 	return
 }
@@ -352,22 +352,28 @@ func (obj *AsChangeMgr) GetBatchFromShipMobile(shipMobiles []string) (results []
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *AsChangeMgr) FetchByPrimaryKey(id int) (result models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`id` = ?", id).First(&result).Error
+func (obj *AsChangeMgr) FetchByPrimaryKey(id int) (result models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
 
 // FetchIndexByEsIndexID  获取多个内容
-func (obj *AsChangeMgr) FetchIndexByEsIndexID(id int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`id` = ?", id).Find(&results).Error
+func (obj *AsChangeMgr) FetchIndexByEsIndexID(id int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`id` = ?", id).Find(&results).Error
 
 	return
 }
 
 // FetchIndexByEsIndexServiceSn  获取多个内容
-func (obj *AsChangeMgr) FetchIndexByEsIndexServiceSn(id int) (results []*models.EsAsChange, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsAsChange{}).Where("`id` = ?", id).Find(&results).Error
+func (obj *AsChangeMgr) FetchIndexByEsIndexServiceSn(id int) (results []*models.AsChange, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.AsChange{}).Where("`id` = ?", id).Find(&results).Error
+
+	return
+}
+
+func (obj *AsChangeMgr) Create(asChange *models.AsChange) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(asChange).Error
 
 	return
 }
