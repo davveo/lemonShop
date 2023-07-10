@@ -22,7 +22,7 @@ func Init(route *gin.Engine) {
 		AdminRouterGroup(adminGroup)
 	}
 
-	buyerGroup := route.Group("/buyer/buyer")
+	buyerGroup := route.Group("/buyer")
 	{
 		BuyerRouterGroup(buyerGroup)
 	}

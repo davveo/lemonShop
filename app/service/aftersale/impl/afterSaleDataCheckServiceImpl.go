@@ -1,6 +1,9 @@
 package impl
 
 import (
+	"errors"
+
+	"github.com/davveo/lemonShop/app/entity"
 	"github.com/davveo/lemonShop/app/service/aftersale"
 	"github.com/davveo/lemonShop/app/service/system"
 	"github.com/davveo/lemonShop/app/service/trade/order"
@@ -16,8 +19,13 @@ type afterSaleDataCheckServiceImpl struct {
 }
 
 func (a afterSaleDataCheckServiceImpl) CheckApplyService(applyAfterSaleVO *vo.ApplyAfterSaleVO) (*dto.AfterSaleApplyDTO, error) {
-	//TODO implement me
-	panic("implement me")
+	userContext := entity.UserContext{}
+	buyer, _ := userContext.GetBuyer()
+	if buyer == nil {
+		return nil, errors.New("当前会员已经退出登录")
+	}
+
+	return nil, nil
 }
 
 func (a afterSaleDataCheckServiceImpl) CheckCancelOrder(refundApplyVO *vo.RefundApplyVO) (*dto.AfterSaleApplyDTO, error) {
