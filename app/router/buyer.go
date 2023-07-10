@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/davveo/lemonShop/app/ctrs"
+	"github.com/davveo/lemonShop/app/ctrs/buyer"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,44 +18,44 @@ func BuyerRouterGroup(router *gin.RouterGroup) {
 
 func PassportGroup(router *gin.RouterGroup) {
 	passportGroup := router.Group("passport/")
-	specsController := ctrs.NewSpecsController()
+	passportController := buyer.NewPassportController()
 	{
-		passportGroup.GET("connect/wechat/auth", specsController.SpecsList)
-		passportGroup.GET("connect/wechat/auth/back", specsController.Create)
-		passportGroup.GET("connect/wechat/login", specsController.Update)
-		passportGroup.GET("connect/pc/:type", specsController.Delete)
-		passportGroup.GET("connect/wap/:type", specsController.Specs)
-		passportGroup.GET("connect/:port/:type/callback", specsController.Specs)
-		passportGroup.GET("account-binder/:type/callback", specsController.Specs)
-		passportGroup.PUT("login-binder/pc/:uuid_connect", specsController.Specs)
-		passportGroup.POST("mobile-binder/sms-code/:mobile", specsController.Specs)
-		passportGroup.POST("mobile-binder/:uuid", specsController.Specs)
-		passportGroup.POST("login-binder/wap/:uuid", specsController.Specs)
-		passportGroup.GET("connect/app/:type/param", specsController.Specs)
-		passportGroup.GET("connect/app/:type/openid", specsController.Specs)
-		passportGroup.GET("login-binder/ali/info", specsController.Specs)
-		passportGroup.POST("sms-binder/app", specsController.Specs)
-		passportGroup.POST("login-binder/app", specsController.Specs)
-		passportGroup.POST("register-binder/app", specsController.Specs)
-		passportGroup.GET("smscode/:mobile", specsController.Specs)
-		passportGroup.GET("username/:username", specsController.Specs)
-		passportGroup.GET("mobile/:mobile", specsController.Specs)
-		passportGroup.POST("token", specsController.Specs)
-		passportGroup.POST("login/smscode/:mobile", specsController.Specs)
-		passportGroup.POST("login", specsController.Specs)
-		passportGroup.POST("login/:mobile", specsController.Specs)
-		passportGroup.GET("auto-login", specsController.Specs)
-		passportGroup.GET("decrypt", specsController.Specs)
-		passportGroup.POST("register-bind/:uuid", specsController.Specs)
-		passportGroup.POST("register/smscode/:mobile", specsController.Specs)
-		passportGroup.POST("register/pc", specsController.Specs)
-		passportGroup.POST("register/wap", specsController.Specs)
+		passportGroup.GET("connect/wechat/auth", passportController.Todo)
+		passportGroup.GET("connect/wechat/auth/back", passportController.Todo)
+		passportGroup.GET("connect/wechat/login", passportController.Todo)
+		passportGroup.GET("connect/pc/:type", passportController.Todo)
+		passportGroup.GET("connect/wap/:type", passportController.Todo)
+		passportGroup.GET("connect/:port/:type/callback", passportController.Todo)
+		passportGroup.GET("account-binder/:type/callback", passportController.Todo)
+		passportGroup.PUT("login-binder/pc/:uuid_connect", passportController.Todo)
+		passportGroup.POST("mobile-binder/sms-code/:mobile", passportController.Todo)
+		passportGroup.POST("mobile-binder/:uuid", passportController.Todo)
+		passportGroup.POST("login-binder/wap/:uuid", passportController.Todo)
+		passportGroup.GET("connect/app/:type/param", passportController.Todo)
+		passportGroup.GET("connect/app/:type/openid", passportController.Todo)
+		passportGroup.GET("login-binder/ali/info", passportController.Todo)
+		passportGroup.POST("sms-binder/app", passportController.Todo)
+		passportGroup.POST("login-binder/app", passportController.Todo)
+		passportGroup.POST("register-binder/app", passportController.Todo)
+		passportGroup.GET("smscode/:mobile", passportController.Todo)
+		passportGroup.GET("username/:username", passportController.Todo)
+		passportGroup.GET("mobile/:mobile", passportController.Todo)
+		passportGroup.POST("token", passportController.Todo)
+		passportGroup.POST("login/smscode/:mobile", passportController.Todo)
+		passportGroup.POST("login", passportController.Todo)
+		passportGroup.POST("login/:mobile", passportController.Todo)
+		passportGroup.GET("auto-login", passportController.Todo)
+		passportGroup.GET("decrypt", passportController.Todo)
+		passportGroup.POST("register-bind/:uuid", passportController.Todo)
+		passportGroup.POST("register/smscode/:mobile", passportController.Todo)
+		passportGroup.POST("register/pc", passportController.Todo)
+		passportGroup.POST("register/wap", passportController.Todo)
 	}
 }
 
 func MemberGroup(router *gin.RouterGroup) {
 	memberGroup := router.Group("members/")
-	memberController := ctrs.NewMemberController()
+	memberController := buyer.NewMemberController()
 	{
 		// 查询会员商品咨询回复消息列表
 		memberGroup.GET("asks/message", memberController.Todo)
@@ -68,7 +68,7 @@ func MemberGroup(router *gin.RouterGroup) {
 
 func TradeGroup(router *gin.RouterGroup) {
 	tradeGroup := router.Group("trade/")
-	tradeController := ctrs.NewTradeController()
+	tradeController := buyer.NewTradeController()
 	{
 		// 购物车相关
 		{
@@ -194,7 +194,7 @@ func TradeGroup(router *gin.RouterGroup) {
 
 func GoodsGroup(router *gin.RouterGroup) {
 	goodsGroup := router.Group("goods/")
-	goodsController := ctrs.NewGoodsController()
+	goodsController := buyer.NewGoodsController()
 
 	// 商品分类
 	{

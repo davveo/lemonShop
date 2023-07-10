@@ -1,4 +1,4 @@
-package ctrs
+package buyer
 
 import (
 	"github.com/gin-gonic/gin"

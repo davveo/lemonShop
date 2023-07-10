@@ -1,4 +1,4 @@
-package ctrs
+package admin
 
 import (
 	"strings"
