@@ -1,5 +1,7 @@
 package entity
 
+import "context"
+
 type UserContext struct {
 }
 
@@ -11,4 +13,15 @@ func (userContext *UserContext) GetSeller() (*Seller, error) {
 
 func (userContext *UserContext) GetBuyer() (*Buyer, error) {
 	return &Buyer{}, nil
+}
+
+var userKey string
+
+func NewContext(ctx context.Context, u *User) context.Context {
+	return context.WithValue(ctx, userKey, u)
+}
+
+func FromContext(ctx context.Context) (*User, bool) {
+	u, ok := ctx.Value(userKey).(*User)
+	return u, ok
 }
