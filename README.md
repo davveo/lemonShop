@@ -39,9 +39,13 @@ IdleTimeout = 200
 
 ### 运行
 ```
-$ cd $GOPATH/src/lemonShop
+$ go install github.com/pilu/fresh
 
+# 直接使用命令启动
 $ active=dev go run main.go # conf-dev配置前置
+
+# 或者使用fresh启动
+$ fresh -c fresh.conf
 ```
 
 项目的运行信息和已存在的 API's

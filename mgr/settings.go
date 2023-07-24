@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -72,7 +73,7 @@ func (obj *SettingsMgr) WithCfgGroup(cfgGroup string) Option {
 }
 
 // GetByOption 功能选项模式获取
-func (obj *SettingsMgr) GetByOption(opts ...Option) (result models.EsSettings, err error) {
+func (obj *SettingsMgr) GetByOption(opts ...Option) (result *models.EsSettings, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -172,5 +173,23 @@ func (obj *SettingsMgr) GetBatchFromCfgGroup(cfgGroups []string) (results []*mod
 func (obj *SettingsMgr) FetchByPrimaryKey(id int) (result models.EsSettings, err error) {
 	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`id` = ?", id).First(&result).Error
 
+	return
+}
+
+func (obj *SettingsMgr) Create(s *models.EsSettings) (err error) {
+	err = obj.wdb.WithContext(obj.ctx).Create(s).Error
+	return
+}
+
+func (obj *SettingsMgr) Update(updates map[string]interface{}, opts ...Option) (err error) {
+	options := options{
+		query: make(map[string]interface{}, len(opts)),
+	}
+	for _, o := range opts {
+		o.apply(&options)
+	}
+
+	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSettings{}).
+		Where(options.query).Updates(updates).Error
 	return
 }

@@ -1,7 +1,10 @@
 package router
 
 import (
-	"github.com/davveo/lemonShop/app/ctrs/buyer"
+	"github.com/davveo/lemonShop/app/ctrs/buyer/goods"
+	"github.com/davveo/lemonShop/app/ctrs/buyer/member"
+	"github.com/davveo/lemonShop/app/ctrs/buyer/passport"
+	"github.com/davveo/lemonShop/app/ctrs/buyer/trade"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +21,7 @@ func BuyerRouterGroup(router *gin.RouterGroup) {
 
 func PassportGroup(router *gin.RouterGroup) {
 	passportGroup := router.Group("passport/")
-	passportController := buyer.NewPassportController()
+	passportController := passport.NewPassportController()
 	{
 		passportGroup.GET("connect/wechat/auth", passportController.Todo)
 		passportGroup.GET("connect/wechat/auth/back", passportController.Todo)
@@ -55,7 +58,7 @@ func PassportGroup(router *gin.RouterGroup) {
 
 func MemberGroup(router *gin.RouterGroup) {
 	memberGroup := router.Group("members/")
-	memberController := buyer.NewMemberController()
+	memberController := member.NewMemberController()
 	{
 		// 查询会员商品咨询回复消息列表
 		memberGroup.GET("asks/message", memberController.Todo)
@@ -68,7 +71,7 @@ func MemberGroup(router *gin.RouterGroup) {
 
 func TradeGroup(router *gin.RouterGroup) {
 	tradeGroup := router.Group("trade/")
-	tradeController := buyer.NewTradeController()
+	tradeController := trade.NewTradeController()
 	{
 		// 购物车相关
 		{
@@ -194,7 +197,7 @@ func TradeGroup(router *gin.RouterGroup) {
 
 func GoodsGroup(router *gin.RouterGroup) {
 	goodsGroup := router.Group("goods/")
-	goodsController := buyer.NewGoodsController()
+	goodsController := goods.NewGoodsController()
 
 	// 商品分类
 	{

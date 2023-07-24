@@ -1,7 +1,7 @@
 package models
 
-// EsMember 会员表(es_member)
-type EsMember struct {
+// Member 会员表(es_member)
+type Member struct {
 	MemberID            int    `gorm:"primaryKey;column:member_id" json:"-"`                      // 会员ID
 	Uname               string `gorm:"column:uname" json:"uname"`                                 // 会员登陆用户名
 	Email               string `gorm:"column:email" json:"email"`                                 // 邮箱
@@ -40,6 +40,6 @@ type EsMember struct {
 }
 
 // TableName get sql table name.获取数据库表名
-func (m *EsMember) TableName() string {
+func (m *Member) TableName() string {
 	return "es_member"
 }

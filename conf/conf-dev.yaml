@@ -1,3 +1,4 @@
+env: dev
 log:
     logSavePath: runtime/logs/access.log
     timeFormat: 2006-01-02 15:04:05

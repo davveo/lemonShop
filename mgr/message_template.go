@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -112,7 +113,7 @@ func (obj *MessageTemplateMgr) WithEmailTitle(emailTitle string) Option {
 }
 
 // GetByOption 功能选项模式获取
-func (obj *MessageTemplateMgr) GetByOption(opts ...Option) (result models.EsMessageTemplate, err error) {
+func (obj *MessageTemplateMgr) GetByOption(opts ...Option) (result *models.EsMessageTemplate, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}

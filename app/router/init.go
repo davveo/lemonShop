@@ -18,16 +18,19 @@ func Init(route *gin.Engine) {
 	}
 
 	adminGroup := route.Group("/admin/admin")
+	//adminGroup.Use(middleware.JWTAuth())
 	{
 		AdminRouterGroup(adminGroup)
 	}
 
 	buyerGroup := route.Group("/buyer")
+	//buyerGroup.Use(middleware.JWTAuth())
 	{
 		BuyerRouterGroup(buyerGroup)
 	}
 
 	sellerGroup := route.Group("/seller/seller")
+	//sellerGroup.Use(middleware.JWTAuth())
 	{
 		SellerRouterGroup(sellerGroup)
 	}

@@ -3,6 +3,7 @@ package mgr
 import (
 	"context"
 	"fmt"
+
 	"github.com/davveo/lemonShop/models"
 	"github.com/davveo/lemonShop/pkg/db"
 
@@ -82,7 +83,7 @@ func (obj *SmsPlatformMgr) WithBean(bean string) Option {
 }
 
 // GetByOption 功能选项模式获取
-func (obj *SmsPlatformMgr) GetByOption(opts ...Option) (result models.EsSmsPlatform, err error) {
+func (obj *SmsPlatformMgr) GetByOption(opts ...Option) (result *models.EsSmsPlatform, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}

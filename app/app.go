@@ -5,6 +5,8 @@ import (
 	"log"
 	"syscall"
 
+	"github.com/davveo/lemonShop/app/middleware"
+
 	"github.com/davveo/lemonShop/app/router"
 	"github.com/davveo/lemonShop/conf"
 	"github.com/davveo/lemonShop/pkg/cache"
@@ -35,15 +37,25 @@ func (s *Server) Init() {
 
 	gin.SetMode(conf.Conf.Server.RunMode)
 
-	route := gin.New()
-	router.Init(route)
+	engine := gin.New()
+	middlewares := []gin.HandlerFunc{
+		gin.Recovery(),
+		gin.Logger(),
+		middleware.Cors(),
+		//middleware.NoCache(),
+		middleware.WrapperCtx(),
+		middleware.RequestId(),
+	}
+	engine.Use(middlewares...)
+
+	router.Init(engine)
 
 	endless.DefaultMaxHeaderBytes = 1 << 20
 	endless.DefaultReadTimeOut = conf.Conf.Server.ReadTimeout
 	endless.DefaultWriteTimeOut = conf.Conf.Server.WriteTimeout
 	endPoint := fmt.Sprintf(":%d", conf.Conf.Server.HttpPort)
 
-	server := endless.NewServer(endPoint, route)
+	server := endless.NewServer(endPoint, engine)
 	server.BeforeBegin = func(add string) {
 		log.Printf("[info] pid is %d, start "+
 			"http server listening %s", syscall.Getpid(), endPoint)

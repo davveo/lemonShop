@@ -1,50 +1,82 @@
 package util
 
 import (
+	"errors"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtSecret []byte
+const (
+	secretKey = "Goshop"
+)
 
-type Claims struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+var (
+	TokenExpired = errors.New("Token is expired")
+)
+
+type CustomClaims struct {
+	Data map[string]interface{}
 	jwt.StandardClaims
 }
 
-// GenerateToken generate tokens used for auth
-func GenerateToken(username, password string) (string, error) {
-	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
-
-	claims := Claims{
-		EncodeMD5(username),
-		EncodeMD5(password),
-		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
-			Issuer:    "gin-blog",
-		},
-	}
-
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenClaims.SignedString(jwtSecret)
-
-	return token, err
+type JWT struct {
+	SignKey []byte
 }
 
-// ParseToken parsing token
-func ParseToken(token string) (*Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
-	})
+func NewJwt() *JWT {
+	return &JWT{SignKey: []byte(secretKey)}
+}
 
-	if tokenClaims != nil {
-		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
-			return claims, nil
+func (j *JWT) CreateToken(claims CustomClaims) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(j.SignKey)
+}
+
+func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (i interface{}, e error) {
+		return j.SignKey, nil
+	})
+	if err != nil {
+		if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
+				return nil, errors.New("That's not even a token")
+			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
+				// Token is expired
+				return nil, TokenExpired
+			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
+				return nil, errors.New("Token not active yet")
+			} else {
+				return nil, errors.New("Couldn't handle this token:")
+			}
 		}
 	}
+	if token != nil {
+		if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+			return claims, nil
+		}
+		return nil, errors.New("Couldn't handle this token:")
 
-	return nil, err
+	} else {
+		return nil, errors.New("Couldn't handle this token:")
+	}
+}
+
+// RefreshToken 更新token
+func (j *JWT) RefreshToken(tokenString string) (string, error) {
+	jwt.TimeFunc = func() time.Time {
+		return time.Unix(0, 0)
+	}
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return j.SignKey, nil
+	})
+	if err != nil {
+		return "", err
+	}
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		jwt.TimeFunc = time.Now
+		claims.StandardClaims.ExpiresAt = time.Now().Add(1 * time.Hour).Unix()
+		return j.CreateToken(*claims)
+	}
+	return "", errors.New("Couldn't handle this token:")
 }

@@ -5,12 +5,13 @@ import "github.com/davveo/lemonShop/app/consts"
 type Seller struct {
 	User
 
-	SellerId     int64  `json:"sellerId"`
+	SellerId     int    `json:"sellerId"`
 	SellerName   string `json:"sellerName"`
 	SelfOperated int    `json:"selfOperated"`
 }
 
-func NewSeller() {
+func NewSeller() Seller {
 	seller := Seller{}
 	seller.Add(consts.Seller)
+	return seller
 }

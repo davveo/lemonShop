@@ -16,6 +16,14 @@ type AppConf struct {
 	CommonGoRoutinePoolSize             int              `yaml:"commonGoRoutinePoolSize"`
 	CommonGoRoutinePoolMinuteExpire     int              `yaml:"commonGoRoutinePoolMinuteExpire"`
 	CommonGoRoutinePoolMaxBlockingTasks int              `yaml:"commonGoRoutinePoolMaxBlockingTasks"`
+	AccessTokenTimeout                  int64            `yaml:"accessTokenTimeout"`
+	RefreshTokenTimeout                 int64            `yaml:"refreshTokenTimeout"`
+	CaptchaTimout                       int64            `yaml:"captchaTimout"`
+	SmsCodeTimout                       int64            `yaml:"smsCodeTimout"`
+	IsDemoSite                          bool             `yaml:"isDemoSite"`
+	Ssl                                 bool             `yaml:"ssl"`
+	Refer                               []string         `yaml:"refer"`
+	Env                                 string           `yaml:"env"`
 	Server                              ServerCfg        `yaml:"server"`
 	Redis                               RedisCfg         `yaml:"redis"`
 	Mysql                               MysqlCfg         `yaml:"mysql"`

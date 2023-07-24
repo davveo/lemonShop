@@ -1,3 +1,4 @@
+env: pre
 log:
   runtimeRootPath: runtime/
   logSavePath: logs/

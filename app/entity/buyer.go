@@ -6,7 +6,8 @@ type Buyer struct {
 	User
 }
 
-func NewBuyer() {
+func NewBuyer() Buyer {
 	buyer := Buyer{}
 	buyer.Add(consts.Buyer)
+	return buyer
 }

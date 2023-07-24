@@ -1,8 +1,6 @@
 package tasks
 
 import (
-	"fmt"
-
 	"github.com/davveo/lemonShop/pkg/logger"
 )
 
@@ -10,17 +8,18 @@ type TaskManager struct {
 	taskPool []Consumer
 }
 
-func (taskManager *TaskManager) AddTask(consumer Consumer) {
+func (taskManager *TaskManager) AddTask(consumers ...Consumer) {
 	isExist := false
 	for _, task := range taskManager.taskPool {
-		if consumer.getName() == task.getName() {
-			isExist = true
-			break
+		for _, consumer := range consumers {
+			if consumer.getName() == task.getName() {
+				isExist = true
+				break
+			}
 		}
 	}
 	if !isExist {
-		logger.GLogger.Info(fmt.Sprintf("mq添加消费者: %s", consumer.getName()))
-		taskManager.taskPool = append(taskManager.taskPool, consumer)
+		taskManager.taskPool = append(taskManager.taskPool, consumers...)
 	}
 }
 
