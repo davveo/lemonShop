@@ -219,7 +219,6 @@ func (obj *SpecValuesMgr) FetchByPrimaryKey(specValueID int) (result *models.EsS
 
 func (obj *SpecValuesMgr) Create(specsValues *models.EsSpecValues) (err error) {
 	err = obj.wdb.WithContext(obj.ctx).Create(specsValues).Error
-
 	return
 }
 

@@ -35,22 +35,22 @@ func (obj *SettingsMgr) Reset() *SettingsMgr {
 }
 
 // Get 获取
-func (obj *SettingsMgr) Get() (result models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).First(&result).Error
+func (obj *SettingsMgr) Get() (result models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).First(&result).Error
 
 	return
 }
 
 // Gets 获取批量结果
-func (obj *SettingsMgr) Gets() (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Find(&results).Error
+func (obj *SettingsMgr) Gets() (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Find(&results).Error
 
 	return
 }
 
 // //////////////////////////////// gorm replace /////////////////////////////////
 func (obj *SettingsMgr) Count(count *int64) (tx *gorm.DB) {
-	return obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Count(count)
+	return obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Count(count)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ func (obj *SettingsMgr) WithCfgGroup(cfgGroup string) Option {
 }
 
 // GetByOption 功能选项模式获取
-func (obj *SettingsMgr) GetByOption(opts ...Option) (result *models.EsSettings, err error) {
+func (obj *SettingsMgr) GetByOption(opts ...Option) (result *models.Settings, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -81,13 +81,13 @@ func (obj *SettingsMgr) GetByOption(opts ...Option) (result *models.EsSettings, 
 		o.apply(&options)
 	}
 
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where(options.query).First(&result).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where(options.query).First(&result).Error
 
 	return
 }
 
 // GetByOptions 批量功能选项模式获取
-func (obj *SettingsMgr) GetByOptions(opts ...Option) (results []*models.EsSettings, err error) {
+func (obj *SettingsMgr) GetByOptions(opts ...Option) (results []*models.Settings, err error) {
 	options := options{
 		query: make(map[string]interface{}, len(opts)),
 	}
@@ -95,7 +95,7 @@ func (obj *SettingsMgr) GetByOptions(opts ...Option) (results []*models.EsSettin
 		o.apply(&options)
 	}
 
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where(options.query).Find(&results).Error
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where(options.query).Find(&results).Error
 
 	return
 }
@@ -109,9 +109,9 @@ func (obj *SettingsMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage
 		o.apply(&options)
 	}
 	resultPage = page
-	results := make([]models.EsSettings, 0)
+	results := make([]models.Settings, 0)
 	var count int64 // 统计总的记录数
-	query := obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where(options.query)
+	query := obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where(options.query)
 	query.Count(&count)
 	resultPage.SetTotal(count)
 	if len(page.GetOrederItemsString()) > 0 {
@@ -126,43 +126,43 @@ func (obj *SettingsMgr) SelectPage(page IPage, opts ...Option) (resultPage IPage
 //////////////////////////enume case ////////////////////////////////////////////
 
 // GetFromID 通过id获取内容 系统设置id
-func (obj *SettingsMgr) GetFromID(id int) (result models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`id` = ?", id).First(&result).Error
+func (obj *SettingsMgr) GetFromID(id int) (result models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
 
 // GetBatchFromID 批量查找 系统设置id
-func (obj *SettingsMgr) GetBatchFromID(ids []int) (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`id` IN (?)", ids).Find(&results).Error
+func (obj *SettingsMgr) GetBatchFromID(ids []int) (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`id` IN (?)", ids).Find(&results).Error
 
 	return
 }
 
 // GetFromCfgValue 通过cfg_value获取内容 系统配置信息
-func (obj *SettingsMgr) GetFromCfgValue(cfgValue string) (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`cfg_value` = ?", cfgValue).Find(&results).Error
+func (obj *SettingsMgr) GetFromCfgValue(cfgValue string) (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`cfg_value` = ?", cfgValue).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCfgValue 批量查找 系统配置信息
-func (obj *SettingsMgr) GetBatchFromCfgValue(cfgValues []string) (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`cfg_value` IN (?)", cfgValues).Find(&results).Error
+func (obj *SettingsMgr) GetBatchFromCfgValue(cfgValues []string) (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`cfg_value` IN (?)", cfgValues).Find(&results).Error
 
 	return
 }
 
 // GetFromCfgGroup 通过cfg_group获取内容 业务设置标识
-func (obj *SettingsMgr) GetFromCfgGroup(cfgGroup string) (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`cfg_group` = ?", cfgGroup).Find(&results).Error
+func (obj *SettingsMgr) GetFromCfgGroup(cfgGroup string) (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`cfg_group` = ?", cfgGroup).Find(&results).Error
 
 	return
 }
 
 // GetBatchFromCfgGroup 批量查找 业务设置标识
-func (obj *SettingsMgr) GetBatchFromCfgGroup(cfgGroups []string) (results []*models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`cfg_group` IN (?)", cfgGroups).Find(&results).Error
+func (obj *SettingsMgr) GetBatchFromCfgGroup(cfgGroups []string) (results []*models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`cfg_group` IN (?)", cfgGroups).Find(&results).Error
 
 	return
 }
@@ -170,13 +170,13 @@ func (obj *SettingsMgr) GetBatchFromCfgGroup(cfgGroups []string) (results []*mod
 //////////////////////////primary index case ////////////////////////////////////////////
 
 // FetchByPrimaryKey primary or index 获取唯一内容
-func (obj *SettingsMgr) FetchByPrimaryKey(id int) (result models.EsSettings, err error) {
-	err = obj.rdb.WithContext(obj.ctx).Model(models.EsSettings{}).Where("`id` = ?", id).First(&result).Error
+func (obj *SettingsMgr) FetchByPrimaryKey(id int) (result models.Settings, err error) {
+	err = obj.rdb.WithContext(obj.ctx).Model(models.Settings{}).Where("`id` = ?", id).First(&result).Error
 
 	return
 }
 
-func (obj *SettingsMgr) Create(s *models.EsSettings) (err error) {
+func (obj *SettingsMgr) Create(s *models.Settings) (err error) {
 	err = obj.wdb.WithContext(obj.ctx).Create(s).Error
 	return
 }
@@ -189,7 +189,7 @@ func (obj *SettingsMgr) Update(updates map[string]interface{}, opts ...Option) (
 		o.apply(&options)
 	}
 
-	err = obj.wdb.WithContext(obj.ctx).Model(models.EsSettings{}).
+	err = obj.wdb.WithContext(obj.ctx).Model(models.Settings{}).
 		Where(options.query).Updates(updates).Error
 	return
 }

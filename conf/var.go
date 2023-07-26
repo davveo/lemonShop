@@ -52,7 +52,6 @@ type MysqlCfg struct {
 		Pass string `yaml:"pass"`
 		Name string `yaml:"name"`
 	} `yaml:"read"`
-
 	Write struct {
 		Addr string `yaml:"addr"`
 		User string `yaml:"user"`

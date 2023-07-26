@@ -1,13 +1,13 @@
 package router
 
 import (
-	"github.com/davveo/lemonShop/app/ctrs/admin"
+	"github.com/davveo/lemonShop/app/ctrs/admin/goods"
 	"github.com/gin-gonic/gin"
 )
 
 func AdminRouterGroup(router *gin.RouterGroup) {
 	goodsGroup := router.Group("goods/")
-	specsController := admin.NewSpecsController()
+	specsController := goods.NewSpecsController()
 	{
 		// done 查询规格项列表
 		goodsGroup.GET("specs", specsController.SpecsList)
